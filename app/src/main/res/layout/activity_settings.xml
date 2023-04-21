@@ -38,7 +38,7 @@
             />
 
         <Switch
-            android:id="@+id/switch1"
+            android:id="@+id/switch_theme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
@@ -60,6 +60,7 @@
             />
 
         <ImageView
+            android:id="@+id/imgage_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/share"
@@ -80,6 +81,7 @@
             />
 
         <ImageView
+            android:id="@+id/imgage_support"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/support"
@@ -100,6 +102,7 @@
             />
 
         <ImageView
+            android:id="@+id/imgage_terms_of_use"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="end|center_vertical"
