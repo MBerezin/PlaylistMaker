@@ -7,5 +7,6 @@
     <dimen name="text_big">22sp</dimen>
     <dimen name="text_medium">16sp</dimen>
     <dimen name="row_height">60dp</dimen>
+    <dimen name="paddingHorizontal">16dp</dimen>
 
 </resources>
