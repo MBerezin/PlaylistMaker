@@ -7,8 +7,8 @@
     android:orientation="vertical"
     android:background="@color/settings_background"
     android:paddingTop="14dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
+    android:paddingLeft="@dimen/paddingHorizontal"
+    android:paddingRight="@dimen/paddingHorizontal"
     android:paddingBottom="16dp">
 
 
