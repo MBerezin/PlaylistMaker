@@ -21,7 +21,8 @@
         android:theme="?attr/actionBarTheme"
         app:title="@string/settings"
         android:backgroundTint="@color/settings_background"
-        app:navigationIcon="@drawable/arrowback" />
+        app:navigationIcon="@drawable/arrowback"
+        app:titleTextColor="@color/text"/>
 
     <FrameLayout
         android:layout_width="match_parent"
