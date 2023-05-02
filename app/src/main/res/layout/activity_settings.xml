@@ -22,93 +22,66 @@
         app:title="@string/settings"
         android:backgroundTint="@color/settings_background"
         app:navigationIcon="@drawable/arrowback"
-        app:titleTextColor="@color/text"/>
+        app:titleTextColor="@color/text_settings"
+        app:titleTextAppearance="@style/toolbar_text"
+        />
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/row_height"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="40dp"
+        style="@style/frame_layout_settings">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:textColor="@color/text"
             android:text="@string/night_theme"
-            android:textSize="@dimen/text_medium"
-            android:layout_marginStart="@dimen/text_settings_margin_start"
-            />
+            style="@style/text_settings"/>
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_theme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
             android:minWidth="48dp"
             android:minHeight="48dp"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            tools:ignore="UseSwitchCompatOrMaterialXml"
+            app:thumbTint="@color/switch_thumb"
+            app:trackTint="@color/switch_track"/>
     </FrameLayout>
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/row_height">
+        style="@style/frame_layout_settings">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:textColor="@color/text"
             android:text="@string/share"
-            android:textSize="@dimen/text_medium"
-            android:layout_marginStart="@dimen/text_settings_margin_start"
-            />
+            style="@style/text_settings"/>
 
         <ImageView
-            android:id="@+id/imgage_share"
+            android:id="@+id/img_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/share"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginEnd="@dimen/icon_settings_margin_end"/>
+            style="@style/img_settings"/>
     </FrameLayout>
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/row_height">
+        style="@style/frame_layout_settings">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:textColor="@color/text"
             android:text="@string/support"
-            android:textSize="@dimen/text_medium"
-            android:layout_marginStart="@dimen/text_settings_margin_start"
-            />
+            style="@style/text_settings"/>
 
         <ImageView
-            android:id="@+id/imgage_support"
+            android:id="@+id/img_support"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/support"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginEnd="@dimen/icon_settings_margin_end"/>
+            style="@style/img_settings"/>
     </FrameLayout>
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/row_height">
+        style="@style/frame_layout_settings">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:textColor="@color/text"
             android:text="@string/user_agreement"
-            android:textSize="@dimen/text_medium"
-            android:layout_marginStart="@dimen/text_settings_margin_start"
-            />
+            style="@style/text_settings"/>
 
         <ImageView
-            android:id="@+id/imgage_terms_of_use"
+            android:id="@+id/img_terms_of_use"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginEnd="@dimen/icon_settings_margin_end"
-            android:src="@drawable/arrowforward" />
+            android:src="@drawable/arrowforward"
+            style="@style/img_settings"/>
     </FrameLayout>
 
 </LinearLayout>
