@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="settings_background">#1A1B22</color>
+    <color name="main_background">#1A1B22</color>
+    <color name="text">#1A1B22</color>
+    <color name="text_settings">#FFFFFF</color>
+    <color name="icon_main">#1A1B22</color>
+    <color name="icon_settings">#FFFFFF</color>
+    <color name="icon_back">#FFFFFF</color>
+    <color name="switch_thumb">#3772E7</color>
+    <color name="switch_track">#3772E7</color>
+
+    <color name="search_view">#FFFFFF</color>
+    <color name="search_view_hint">#1A1B22</color>
+    <color name="search_header">#FFFFFF</color>
+    <color name="search_view_text">#1A1B22</color>
+
+</resources>
