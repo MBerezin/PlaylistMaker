@@ -12,7 +12,11 @@ import androidx.core.view.isVisible
 
 class SearchActivity : AppCompatActivity() {
 
-    private var searchText: String = String()
+    companion object {
+        var searchText: String = String()
+    }
+
+
     private lateinit var inpEditText: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
