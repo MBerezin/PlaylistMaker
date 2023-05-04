@@ -22,22 +22,24 @@ class SettingsActivity : AppCompatActivity() {
 
         imgShare.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.course_link))
-            shareIntent.type = getString(R.string.share_type)
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "https://practicum.yandex.ru/android-developer/")
+            shareIntent.type = "text/plain"
             startActivity(shareIntent)
         }
 
         imgSupport.setOnClickListener {
-            val mailIntent = Intent(Intent.ACTION_SENDTO)
-            mailIntent.data = Uri.parse("mailto:")
-            mailIntent.putExtra(Intent.EXTRA_EMAIL,arrayOf(getString(R.string.email)))
-            mailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
-            mailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_text))
-            startActivity(mailIntent)
+            Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL,arrayOf(getString(R.string.email)))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.email_text))
+                startActivity(this)
+            }
+
         }
 
         imgTermsOfUse.setOnClickListener {
-            val link: Uri = Uri.parse(getString(R.string.terms_of_use_link))
+            val link: Uri = Uri.parse("https://yandex.ru/legal/practicum_offer/")
             val linkIntent = Intent(Intent.ACTION_VIEW, link)
             startActivity(linkIntent)
         }
