@@ -21,7 +21,8 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp">
 
             <EditText
                 android:id="@+id/et_search"
@@ -57,5 +58,10 @@
                 android:visibility="gone"/>
 
         </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trackList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
