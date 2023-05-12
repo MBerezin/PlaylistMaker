@@ -28,6 +28,11 @@
     <color name="track_time">#AEAFB4</color>
     <color name="icon_search">#AEAFB4</color>
 
+    <color name="view_text_placeholder">#1A1B22</color>
+    <color name="button_text_placeholder">#FFFFFF</color>
+    <color name="button_background_placeholder">#1A1B22</color>
+    <color name="icon_placeholder">#1A1B22</color>
+
 
 
 
