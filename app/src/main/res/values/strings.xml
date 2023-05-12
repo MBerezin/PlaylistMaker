@@ -11,4 +11,9 @@
     <string name="email" translatable="false">beresin.m@googlemail.com</string>
     <string name="email_subject" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="email_text" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+
+    <string name="no_results">Ничего не нашлось</string>
+    <string name="connection_problem">Проблемы со связью</string>
+    <string name="loading_fail">\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="reload">Обновить</string>
 </resources>
