@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
-    companion object {
+    private companion object {
         var searchText: String = String()
     }
 
@@ -99,6 +99,27 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun setViewAfterSearch(state: TracksResponseState){
+        when (state) {
+            TracksResponseState.EMPTY -> {
+                linearLayoutPlaceholder.visibility = View.VISIBLE
+                txtPlaceholder.text = getString(R.string.no_results)
+                imgPlaceholder.setImageResource(R.drawable.noresults)
+            }
+            TracksResponseState.SUCCESS -> {
+                linearLayoutPlaceholder.visibility = View.GONE
+            }
+            TracksResponseState.ERROR -> {
+                linearLayoutPlaceholder.visibility = View.VISIBLE
+                btnReload.visibility = View.VISIBLE
+                txtPlaceholder.text = getString(R.string.connection_problem)
+                    .plus("\n")
+                    .plus(getString(R.string.loading_fail))
+                imgPlaceholder.setImageResource(R.drawable.connectionproblem)
+            }
+        }
+    }
+
     private fun searchTracks()  {
         itunesService.search(inpEditText.text.toString()).enqueue(object : Callback<TracksResponse>{
             override fun onResponse(
@@ -112,31 +133,19 @@ class SearchActivity : AppCompatActivity() {
                         adapter.notifyDataSetChanged()
                     }
                     if (tracks.isEmpty()) {
-                        linearLayoutPlaceholder.visibility = View.VISIBLE
-                        txtPlaceholder.text = getString(R.string.no_results)
-                        imgPlaceholder.setImageResource(R.drawable.noresults)
+                        setViewAfterSearch(TracksResponseState.EMPTY)
                     } else {
-                        linearLayoutPlaceholder.visibility = View.GONE
+                        setViewAfterSearch(TracksResponseState.SUCCESS)
                     }
                 } else {
                     tracks.clear()
-                    linearLayoutPlaceholder.visibility = View.VISIBLE
-                    btnReload.visibility = View.VISIBLE
-                    txtPlaceholder.text = getString(R.string.connection_problem)
-                        .plus("\n")
-                        .plus(getString(R.string.loading_fail))
-                    imgPlaceholder.setImageResource(R.drawable.connectionproblem)
+                    setViewAfterSearch(TracksResponseState.ERROR)
                 }
             }
 
             override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
                 tracks.clear()
-                linearLayoutPlaceholder.visibility = View.VISIBLE
-                btnReload.visibility = View.VISIBLE
-                txtPlaceholder.text = getString(R.string.connection_problem)
-                    .plus("\n")
-                    .plus(getString(R.string.loading_fail))
-                imgPlaceholder.setImageResource(R.drawable.connectionproblem)
+                setViewAfterSearch(TracksResponseState.ERROR)
             }
         })
     }
