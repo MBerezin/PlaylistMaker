@@ -22,11 +22,12 @@ class TrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     fun bind(model: Track) {
         trackNameView.text = model.trackName
         artistNameView.text = model.artistName
-        if(model.trackTime === null){
+        if (model.trackTimeMillis === null){
             trackTimeView.text = "00:00"
         } else {
-            trackTimeView.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTime)
+            trackTimeView.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis.toInt())
         }
+
 
         Glide.with(itemView)
             .load(model.artworkUrl100)
