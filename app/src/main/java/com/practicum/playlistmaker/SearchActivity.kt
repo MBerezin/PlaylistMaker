@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,6 +17,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
+const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
 
 class SearchActivity : AppCompatActivity() {
 
@@ -35,13 +38,22 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var inpEditText: EditText
     private lateinit var imgClear: ImageView
     private lateinit var recycler: RecyclerView
+    private lateinit var historyRecycler: RecyclerView
     private lateinit var linearLayoutPlaceholder: LinearLayout
+    private lateinit var linearLayoutHistory: LinearLayout
     private lateinit var imgPlaceholder: ImageView
     private lateinit var txtPlaceholder: TextView
     private lateinit var btnReload: Button
+    private lateinit var btnClearHistory: Button
+    private lateinit var sharedPref: SharedPreferences
+    private lateinit var searchHistory: SearchHistory
+
+
 
     private val tracks = arrayListOf<Track>()
+    private val historyTracks = arrayListOf<Track>()
     private val adapter = TrackAdapter(tracks)
+    private val historyAdapter = TrackHistoryAdapter(historyTracks)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,18 +62,37 @@ class SearchActivity : AppCompatActivity() {
         imgClear = findViewById<ImageView>(R.id.img_clear)
         inpEditText = findViewById<EditText>(R.id.et_search)
         recycler = findViewById<RecyclerView>(R.id.trackList)
+        historyRecycler = findViewById<RecyclerView>(R.id.historyTrackList)
         linearLayoutPlaceholder = findViewById<LinearLayout>(R.id.linearLayoutPlaceholder)
+        linearLayoutHistory = findViewById<LinearLayout>(R.id.linearLayoutHistory)
         imgPlaceholder = findViewById<ImageView>(R.id.imageViewPlaceholder)
         txtPlaceholder = findViewById<TextView>(R.id.textViewPlaceholder)
         btnReload = findViewById<Button>(R.id.buttonReload)
+        btnClearHistory = findViewById<Button>(R.id.buttonСlearРistory)
 
+        sharedPref = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+        searchHistory = SearchHistory(sharedPref)
 
+        searchHistory.read(historyTracks)
 
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
 
+        historyRecycler.layoutManager = LinearLayoutManager(this)
+        historyRecycler.adapter = historyAdapter
+
         btnReload.setOnClickListener{
             searchTracks()
+        }
+
+        btnClearHistory.setOnClickListener{
+            searchHistory.clear(historyTracks)
+            linearLayoutHistory.visibility = View.GONE
+        }
+
+        adapter.itemClickListener = { position, track ->
+            searchHistory.add(track, historyTracks)
+            historyAdapter.notifyDataSetChanged()
         }
 
         imgClear.setOnClickListener {
@@ -80,6 +111,9 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchText = s.toString()
                 imgClear.isVisible = !s.isNullOrEmpty()
+
+                linearLayoutHistory.visibility = if (inpEditText.hasFocus() && s?.isEmpty() === true && historyTracks.isNotEmpty()) View.VISIBLE else View.GONE
+
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -87,6 +121,10 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inpEditText.addTextChangedListener(textWatcher)
+
+        inpEditText.setOnFocusChangeListener { view, hasFocus ->
+            linearLayoutHistory.visibility = if(hasFocus && inpEditText.text.isEmpty() && historyTracks.isNotEmpty()) View.VISIBLE else View.GONE
+        }
 
         inpEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
