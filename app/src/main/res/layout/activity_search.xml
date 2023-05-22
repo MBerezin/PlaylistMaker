@@ -11,15 +11,19 @@
     android:paddingRight="@dimen/paddingHorizontal"
     android:paddingBottom="16dp">
 
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="26dp"
-        android:text="@string/search"
-        android:textSize="22sp"
-        android:fontFamily="@font/ys_display_medium"
-        android:layout_marginTop="14dp"
-        android:layout_marginBottom="24dp"
-        android:textColor="@color/search_header"/>
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="@string/search"
+        android:backgroundTint="@color/settings_background"
+        app:navigationIcon="@drawable/arrowback"
+        app:titleTextColor="@color/search_header"
+        app:titleTextAppearance="@style/toolbar_text"
+        android:layout_marginLeft="-16dp"/>
 
         <FrameLayout
             android:layout_width="match_parent"

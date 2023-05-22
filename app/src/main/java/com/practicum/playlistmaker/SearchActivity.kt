@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -9,9 +10,11 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,6 +22,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
+const val PLAYER_TRACK = "player_track"
 
 class SearchActivity : AppCompatActivity() {
 
@@ -47,6 +51,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var btnClearHistory: Button
     private lateinit var sharedPref: SharedPreferences
     private lateinit var searchHistory: SearchHistory
+    private lateinit var toolbar: Toolbar
 
 
 
@@ -69,6 +74,11 @@ class SearchActivity : AppCompatActivity() {
         txtPlaceholder = findViewById<TextView>(R.id.textViewPlaceholder)
         btnReload = findViewById<Button>(R.id.buttonReload)
         btnClearHistory = findViewById<Button>(R.id.buttonСlearРistory)
+        toolbar = findViewById<Toolbar>(R.id.toolbar)
+
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
 
         sharedPref = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPref)
@@ -90,9 +100,14 @@ class SearchActivity : AppCompatActivity() {
             linearLayoutHistory.visibility = View.GONE
         }
 
-        adapter.itemClickListener = { position, track ->
+        adapter.itemClickListener = { track ->
             searchHistory.add(track, historyTracks)
             historyAdapter.notifyDataSetChanged()
+            openPlayer(track)
+        }
+
+        historyAdapter.itemClickListener = { track ->
+            openPlayer(track)
         }
 
         imgClear.setOnClickListener {
@@ -186,6 +201,12 @@ class SearchActivity : AppCompatActivity() {
                 setViewAfterSearch(TracksResponseState.ERROR)
             }
         })
+    }
+
+    private fun openPlayer(track: Track){
+        val playerIntent = Intent(this, PlayerActivity::class.java)
+        sharedPref.edit().putString(PLAYER_TRACK, Gson().toJson(track)).apply()
+        startActivity(playerIntent)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
