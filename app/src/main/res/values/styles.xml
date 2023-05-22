@@ -37,4 +37,16 @@
         <item name="android:textSize">22sp</item>
     </style>
 
+    <style name="player_value_text">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/player_value_text</item>
+    </style>
+
+    <style name="player_label_text">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/player_label_text</item>
+    </style>
+
 </resources>
