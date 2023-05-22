@@ -8,5 +8,6 @@
     <dimen name="text_medium">16sp</dimen>
     <dimen name="row_height">60dp</dimen>
     <dimen name="paddingHorizontal">16dp</dimen>
+    <dimen name="roundCornerPlayerArtwork">8dp</dimen>
 
 </resources>
