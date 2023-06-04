@@ -12,9 +12,8 @@ data class Track(
     val primaryGenreName: String,// Жанр трека
     val country: String)// Страна исполнителя
 {
-    fun getCoverArtwork(): String{
-        return artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
-    }
+    fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
+
 
     fun getReleaseDate(): String{
         return if(releaseDate.isNotEmpty()){
