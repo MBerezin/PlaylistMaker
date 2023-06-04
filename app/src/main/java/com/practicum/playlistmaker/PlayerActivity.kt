@@ -44,14 +44,14 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        sharedPref = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+        sharedPref = getSharedPreferences(SearchActivity.PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
 
         showTrack()
 
     }
 
     private fun showTrack(){
-        val json = sharedPref.getString(PLAYER_TRACK, null)
+        val json = sharedPref.getString(SearchActivity.PLAYER_TRACK, null)
         if (json !== null){
             val trackFromJson = Gson().fromJson(json, Track::class.java)
 

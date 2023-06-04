@@ -24,7 +24,7 @@ class SettingsActivity : AppCompatActivity() {
         imgTermsOfUse = findViewById<ImageView>(R.id.img_terms_of_use)
         switchTheme = findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switch_theme)
 
-        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences(SearchActivity.PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
         switchTheme.isChecked = sharedPrefs.getBoolean(THEME_SWITCHER_KEY, false)
 
         toolbar.setNavigationOnClickListener {
@@ -59,7 +59,7 @@ class SettingsActivity : AppCompatActivity() {
         switchTheme.setOnCheckedChangeListener { switcher, checked ->
             (applicationContext as App).switchTheme(checked)
 
-            val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+            val sharedPrefs = getSharedPreferences(SearchActivity.PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
             sharedPrefs.edit()
                 .putBoolean(THEME_SWITCHER_KEY, checked)
                 .apply()

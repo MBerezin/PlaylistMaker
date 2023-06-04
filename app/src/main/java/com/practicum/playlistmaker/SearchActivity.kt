@@ -21,13 +21,16 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
-const val PLAYER_TRACK = "player_track"
+
 
 class SearchActivity : AppCompatActivity() {
 
-    private companion object {
-        var searchText: String = String()
+    private var searchText: String = String()
+
+    companion object {
+        const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
+        const val PLAYER_TRACK = "player_track"
+
     }
 
     private val itunesBaseUrl = "http://itunes.apple.com"
@@ -57,7 +60,11 @@ class SearchActivity : AppCompatActivity() {
 
     private val tracks = arrayListOf<Track>()
     private val historyTracks = arrayListOf<Track>()
-    private val adapter = TrackAdapter(tracks)
+    private val adapter = TrackAdapter(tracks, { track ->
+        searchHistory.add(track, historyTracks)
+        historyAdapter.notifyDataSetChanged()
+        openPlayer(track)
+    })
     private val historyAdapter = TrackHistoryAdapter(historyTracks)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,12 +105,6 @@ class SearchActivity : AppCompatActivity() {
         btnClearHistory.setOnClickListener{
             searchHistory.clear(historyTracks)
             linearLayoutHistory.visibility = View.GONE
-        }
-
-        adapter.itemClickListener = { track ->
-            searchHistory.add(track, historyTracks)
-            historyAdapter.notifyDataSetChanged()
-            openPlayer(track)
         }
 
         historyAdapter.itemClickListener = { track ->
