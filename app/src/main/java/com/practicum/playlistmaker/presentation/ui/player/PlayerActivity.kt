@@ -1,16 +1,16 @@
-package com.practicum.playlistmaker.ui.player
+package com.practicum.playlistmaker.presentation.ui.player
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.creator.Creator.providePlayerPresenter
 import com.practicum.playlistmaker.presentation.model.TrackInfo
 import com.practicum.playlistmaker.presentation.presenter.player.PlayerPresenter
 import com.practicum.playlistmaker.presentation.presenter.player.PlayerView
@@ -33,18 +33,11 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
     private lateinit var buttonPlayTrack: ImageButton
     private lateinit var toolbar: Toolbar
 
-    private val handler = Handler(Looper.getMainLooper())
-
-    companion object {
-
-        private const val PROGRESS_TIME_REMAINED_DELAY = 300L
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        presenter = PlayerPresenter(this, this)
+        presenter = providePlayerPresenter(this, this)
         presenter.loadTrack()
 
         imageViewArtwork = findViewById<ImageView>(R.id.imageViewArtwork)
@@ -78,10 +71,9 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
     override fun onDestroy() {
         presenter.onDestroy()
         super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
     }
 
-    override fun showTrack(trackInfo: TrackInfo){
+    override fun showTrack(trackInfo: TrackInfo) {
         val roundCorner = this.resources.getDimensionPixelSize(R.dimen.roundCornerPlayerArtwork)
 
         textViewTrackName.text = trackInfo.trackName
@@ -106,25 +98,20 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
         textViewTimeRemained.text = "00:00"
     }
 
-    override fun setTrackCompleted(){
-
+    override fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun startPlayer() {
         buttonPlayTrack.setImageResource(R.drawable.pause)
-        handler.post(setTrackTimeRemained())
     }
 
     override fun pausePlayer() {
         buttonPlayTrack.setImageResource(R.drawable.play)
     }
 
-    private fun setTrackTimeRemained(): Runnable{
-        return object : Runnable{
-            override fun run() {
-                textViewTimeRemained.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(presenter.getTrackTimeRemained())
-                handler.postDelayed(this, PROGRESS_TIME_REMAINED_DELAY)
-            }
-        }
+    override fun setTrackTimeRemained(timeRemained: Int) {
+        textViewTimeRemained.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(timeRemained)
     }
 }

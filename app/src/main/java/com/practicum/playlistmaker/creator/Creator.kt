@@ -7,12 +7,18 @@ import com.practicum.playlistmaker.domain.api.MediaPlayerApi
 import com.practicum.playlistmaker.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.dao.TrackDAO
 import com.practicum.playlistmaker.domain.impl.PlayerInteractorImpl
+import com.practicum.playlistmaker.presentation.presenter.player.PlayerPresenter
+import com.practicum.playlistmaker.presentation.presenter.player.PlayerView
 
 
 object Creator {
 
-    fun providePlayerInteractor(context: Context): PlayerInteractor{
+    private fun providePlayerInteractor(context: Context): PlayerInteractor{
         return PlayerInteractorImpl(provideTrackDAO(context))
+    }
+
+    fun providePlayerPresenter(view: PlayerView, context: Context): PlayerPresenter {
+        return PlayerPresenter(view, providePlayerInteractor(context))
     }
 
     private fun provideTrackDAO(context: Context): TrackDAO {

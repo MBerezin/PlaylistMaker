@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.practicum.playlistmaker.domain.model.Track
-import com.practicum.playlistmaker.ui.player.PlayerActivity
+import com.practicum.playlistmaker.presentation.ui.player.PlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,12 +67,11 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
 
 
-
     private val tracks = arrayListOf<Track>()
     private val historyTracks = arrayListOf<Track>()
     private val adapter = TrackAdapter(tracks, { track ->
 
-        if(clickDebounce()){
+        if (clickDebounce()) {
             searchHistory.add(track, historyTracks)
             historyAdapter.notifyDataSetChanged()
             openPlayer(track)
@@ -115,11 +114,11 @@ class SearchActivity : AppCompatActivity() {
         historyRecycler.layoutManager = LinearLayoutManager(this)
         historyRecycler.adapter = historyAdapter
 
-        btnReload.setOnClickListener{
+        btnReload.setOnClickListener {
             searchTracks()
         }
 
-        btnClearHistory.setOnClickListener{
+        btnClearHistory.setOnClickListener {
             searchHistory.clear(historyTracks)
             linearLayoutHistory.visibility = View.GONE
         }
@@ -141,7 +140,8 @@ class SearchActivity : AppCompatActivity() {
                 searchText = s.toString()
                 imgClear.isVisible = !s.isNullOrEmpty()
 
-                linearLayoutHistory.visibility = if (inpEditText.hasFocus() && s?.isEmpty() === true && historyTracks.isNotEmpty()) View.VISIBLE else View.GONE
+                linearLayoutHistory.visibility =
+                    if (inpEditText.hasFocus() && s?.isEmpty() === true && historyTracks.isNotEmpty()) View.VISIBLE else View.GONE
                 searchDebounce()
 
             }
@@ -153,7 +153,8 @@ class SearchActivity : AppCompatActivity() {
         inpEditText.addTextChangedListener(textWatcher)
 
         inpEditText.setOnFocusChangeListener { view, hasFocus ->
-            linearLayoutHistory.visibility = if(hasFocus && inpEditText.text.isEmpty() && historyTracks.isNotEmpty()) View.VISIBLE else View.GONE
+            linearLayoutHistory.visibility =
+                if (hasFocus && inpEditText.text.isEmpty() && historyTracks.isNotEmpty()) View.VISIBLE else View.GONE
         }
 
 /*        inpEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -167,7 +168,7 @@ class SearchActivity : AppCompatActivity() {
         }*/
     }
 
-    private fun setViewAfterSearch(state: TracksResponseState){
+    private fun setViewAfterSearch(state: TracksResponseState) {
         when (state) {
             TracksResponseState.EMPTY -> {
                 linearLayoutPlaceholder.visibility = View.VISIBLE
@@ -231,7 +232,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun openPlayer(track: Track){
+    private fun openPlayer(track: Track) {
         val playerIntent = Intent(this, PlayerActivity::class.java)
         sharedPref.edit().putString(PLAYER_TRACK, Gson().toJson(track)).apply()
         startActivity(playerIntent)
@@ -248,7 +249,7 @@ class SearchActivity : AppCompatActivity() {
         inpEditText.setText(searchText)
     }
 
-    private fun clickDebounce() : Boolean {
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false

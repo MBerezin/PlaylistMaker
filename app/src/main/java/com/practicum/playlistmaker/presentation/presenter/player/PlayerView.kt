@@ -7,5 +7,6 @@ interface PlayerView {
     fun startPlayer()
     fun pausePlayer()
     fun preparePlayer()
-    fun setTrackCompleted()
+    fun showError(message: String)
+    fun setTrackTimeRemained(timeRemained: Int)
 }

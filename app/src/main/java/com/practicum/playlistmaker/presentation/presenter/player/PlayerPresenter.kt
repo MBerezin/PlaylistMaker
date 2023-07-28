@@ -1,9 +1,8 @@
 package com.practicum.playlistmaker.presentation.presenter.player
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.consumer.Consumer
 import com.practicum.playlistmaker.domain.consumer.ConsumerData
 import com.practicum.playlistmaker.domain.model.PlayerState
@@ -12,10 +11,14 @@ import com.practicum.playlistmaker.presentation.mapper.TrackMapper
 
 class PlayerPresenter(
     private val view: PlayerView,
-    private val context: Context,
+    private val playerInteractor: PlayerInteractor
 ) {
 
-    private val playerInteractor = Creator.providePlayerInteractor(context)
+    companion object {
+
+        private const val PROGRESS_TIME_REMAINED_DELAY = 300L
+    }
+
     private var playerState : PlayerState  = PlayerState.STATE_DEFAULT
 
     private val handler = Handler(Looper.getMainLooper())
@@ -41,7 +44,7 @@ class PlayerPresenter(
         return Runnable {
             when (data) {
                 is ConsumerData.Error -> {
-                    //view.showError(data.message)
+                    view.showError(data.message)
                 }
 
                 is ConsumerData.Data -> {
@@ -62,6 +65,7 @@ class PlayerPresenter(
 
     fun onDestroy() {
         handler.removeCallbacksSafe(currentConsumeRunnable)
+        handler.removeCallbacksAndMessages(null)
         playerInteractor.releasePlayer()
     }
 
@@ -90,7 +94,16 @@ class PlayerPresenter(
     private fun startPlayer() {
         view?.startPlayer()
         playerState = PlayerState.STATE_PLAYING
+        handler.post(setTrackTimeRemained())
+    }
 
+    private fun setTrackTimeRemained(): Runnable{
+        return object : Runnable{
+            override fun run() {
+                view?.setTrackTimeRemained(playerInteractor.getTrackTimeRemained())
+                handler.postDelayed(this, PROGRESS_TIME_REMAINED_DELAY)
+            }
+        }
     }
 
     fun startPreparePlayer() {
@@ -110,9 +123,4 @@ class PlayerPresenter(
         view?.pausePlayer()
         playerState = PlayerState.STATE_PAUSED
     }
-
-    fun getTrackTimeRemained(): Int{
-        return playerInteractor.getTrackTimeRemained()
-    }
-
 }
