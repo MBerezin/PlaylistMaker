@@ -2,6 +2,7 @@ package com.practicum.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmaker.creator.Creator
 
 const val THEME_SWITCHER_KEY = "key_for_switch_theme"
 
@@ -10,7 +11,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val sharedPrefs = getSharedPreferences(SearchActivity.PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+        val sharedPrefs = Creator.getSharedPref(this)
         darkTheme = sharedPrefs.getBoolean(THEME_SWITCHER_KEY, false)
         switchTheme(darkTheme)
     }
