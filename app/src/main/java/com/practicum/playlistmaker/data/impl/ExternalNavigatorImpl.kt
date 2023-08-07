@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.data.impl
 
-import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
@@ -10,19 +10,19 @@ import com.practicum.playlistmaker.domain.sharing.model.EmailData
 import com.practicum.playlistmaker.ui.player.activity.PlayerActivity
 
 class ExternalNavigatorImpl(
-    private val application: Application
+    private val context: Context
 ): ExternalNavigator {
 
     private val shareLink = "https://practicum.yandex.ru/android-developer/"
-    private val emailText = application.getString(R.string.email_text)
-    private val emailSubject = application.getString(R.string.email_subject)
-    private val email = application.getString(R.string.email)
+    private val emailText = context.getString(R.string.email_text)
+    private val emailSubject = context.getString(R.string.email_subject)
+    private val email = context.getString(R.string.email)
     private val termsOfUseLink = "https://yandex.ru/legal/practicum_offer/"
 
     private val emailData = EmailData(email = email)
 
     override fun shareLink() {
-        application.startActivity(
+        context.startActivity(
             Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, shareLink)
@@ -32,7 +32,7 @@ class ExternalNavigatorImpl(
 
     override fun openLink() {
         val link = Uri.parse(termsOfUseLink)
-        application.startActivity(
+        context.startActivity(
             Intent(Intent.ACTION_VIEW, link).apply{
                 flags = FLAG_ACTIVITY_NEW_TASK
             }
@@ -40,7 +40,7 @@ class ExternalNavigatorImpl(
     }
 
     override fun openEmail() {
-        application.startActivity(
+        context.startActivity(
             Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse(emailData.mailto)
                 putExtra(Intent.EXTRA_EMAIL, emailData.email)
@@ -52,8 +52,8 @@ class ExternalNavigatorImpl(
     }
 
     override fun openPlayer() {
-        application.startActivity(
-            Intent(application, PlayerActivity::class.java).apply {
+        context.startActivity(
+            Intent(context, PlayerActivity::class.java).apply {
                 flags = FLAG_ACTIVITY_NEW_TASK
             }
         )

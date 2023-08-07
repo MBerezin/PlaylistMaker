@@ -9,7 +9,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.*
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
@@ -17,11 +16,12 @@ import com.practicum.playlistmaker.ui.search.adapters.TrackAdapter
 import com.practicum.playlistmaker.ui.search.adapters.TrackHistoryAdapter
 import com.practicum.playlistmaker.ui.search.model.ViewModelSearchState
 import com.practicum.playlistmaker.ui.search.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var viewModelSearch: SearchViewModel
+    private val viewModelSearch: SearchViewModel by viewModel()
     private val handler = Handler(Looper.getMainLooper())
 
     private var searchText: String = String()
@@ -49,11 +49,6 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModelSearch = ViewModelProvider(
-            this,
-            SearchViewModel.getSearchViewModelFactory()
-        )[SearchViewModel::class.java]
-
         viewModelSearch.observeSearchState().observe(this){searchState ->
             when(searchState){
                 ViewModelSearchState.EmptySearchState -> {
@@ -72,6 +67,7 @@ class SearchActivity : AppCompatActivity() {
                 }
                 is ViewModelSearchState.SuccessSearchState -> {
                     binding.linearLayoutPlaceholder.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
                     binding.trackList.visibility = View.VISIBLE
                     adapter.setTracks(searchState.tracks)
                 }

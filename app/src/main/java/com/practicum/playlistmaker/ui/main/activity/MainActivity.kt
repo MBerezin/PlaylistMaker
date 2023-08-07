@@ -2,7 +2,6 @@ package com.practicum.playlistmaker.ui.main.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivityMainBinding
 import com.practicum.playlistmaker.ui.main.router.NavigationRouter
 
@@ -17,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        navigationRouter = Creator.getNavigationRouter(this)
+        navigationRouter = NavigationRouter(this)
 
         binding.searchBtn.setOnClickListener {
             navigationRouter.getSearch()

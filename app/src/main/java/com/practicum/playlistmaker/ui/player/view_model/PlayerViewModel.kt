@@ -1,15 +1,8 @@
 package com.practicum.playlistmaker.ui.player.view_model
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.creator.Creator
+import androidx.lifecycle.*
 import com.practicum.playlistmaker.domain.player.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.player.consumer.Consumer
 import com.practicum.playlistmaker.domain.player.consumer.ConsumerData
@@ -20,23 +13,13 @@ import com.practicum.playlistmaker.ui.player.model.ViewModelTrackState
 import com.practicum.playlistmaker.ui.player.mapper.TrackMapper
 
 class PlayerViewModel(
-    private val application: Application,
     private val playerInteractor: PlayerInteractor,
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     companion object {
 
         private const val PROGRESS_TIME_REMAINED_DELAY = 300L
 
-        fun getPlayerViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application
-                PlayerViewModel(
-                    application,
-                    Creator.providePlayerInteractor(application)
-                )
-            }
-        }
     }
 
     private val playerStateLiveData = MutableLiveData<ViewModelPlayerState>()
@@ -81,6 +64,7 @@ class PlayerViewModel(
                         }
                     }
                     val trackInfo = TrackMapper.map(data.value)
+
                     trackStateLiveData.postValue(ViewModelTrackState.ShowTrack(trackInfo))
                 }
             }
@@ -137,8 +121,8 @@ class PlayerViewModel(
         }
     }
 
-    fun startPreparePlayer() {
-        playerInteractor.preparePlayer()
+    fun startPreparePlayer(url: String) {
+        playerInteractor.preparePlayer(url)
     }
 
     private fun preparePlayer() {

@@ -1,11 +1,14 @@
-package com.practicum.playlistmaker.domain.player.api
+package com.practicum.playlistmaker.data.player.api
 
+import com.practicum.playlistmaker.domain.player.api.PlayerStateListener
 import com.practicum.playlistmaker.domain.player.consumer.Consumer
 import com.practicum.playlistmaker.domain.player.model.Track
 
-interface PlayerInteractor {
+interface PlayerRepository {
+    fun getTrackDetails(
+        consumer: Consumer<Track>
+    )
 
-    fun getTrackDetails(consumer: Consumer<Track>)
     fun playTrack()
     fun pauseTrack()
     fun releasePlayer()
