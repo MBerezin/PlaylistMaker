@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.media.activity.MediaActivity"
-    android:background="@color/settings_background"
+    android:background="@color/media_background"
     android:paddingTop="14dp"
     android:paddingLeft="@dimen/paddingHorizontal"
     android:paddingRight="@dimen/paddingHorizontal"
@@ -20,7 +20,7 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:title="@string/mediathek"
-        android:backgroundTint="@color/settings_background"
+        android:backgroundTint="@color/media_background"
         app:navigationIcon="@drawable/arrowback"
         app:titleTextColor="@color/search_header"
         app:titleTextAppearance="@style/toolbar_text"
@@ -29,11 +29,16 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@color/media_background"
+        app:tabTextColor="@color/tab_layout_text"
+        app:tabIndicatorColor="@color/tab_layout_text"
+        app:tabTextAppearance="@style/tabLayoutTextAppearance"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 
 </LinearLayout >

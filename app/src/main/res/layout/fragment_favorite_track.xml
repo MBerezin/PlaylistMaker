@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/settings_background">
+    android:background="@color/media_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         <ImageView
             android:layout_width="@dimen/favorite_tracks_empty_icon"
             android:layout_height="@dimen/favorite_tracks_empty_icon"
-            android:layout_marginTop="104dp"
+            android:layout_marginTop="106dp"
             app:srcCompat="@drawable/noresults"
             android:layout_gravity="center"/>
 
