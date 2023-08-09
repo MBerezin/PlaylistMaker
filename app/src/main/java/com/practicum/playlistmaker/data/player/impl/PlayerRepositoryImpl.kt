@@ -14,7 +14,7 @@ class PlayerRepositoryImpl(
 ) : PlayerRepository {
 
     private var listener: PlayerStateListener? = null
-    private lateinit var mediaPlayer: MediaPlayer
+    private var mediaPlayer: MediaPlayer? = null
 
     init {
         listener?.onStateChanged(PlayerState.STATE_DEFAULT)
@@ -31,21 +31,21 @@ class PlayerRepositoryImpl(
     }
 
     override fun playTrack() {
-        mediaPlayer.start()
+        this.mediaPlayer?.start()
         listener?.onStateChanged(PlayerState.STATE_PLAYING)
     }
 
     override fun pauseTrack() {
-        mediaPlayer.pause()
+        this.mediaPlayer?.pause()
         listener?.onStateChanged(PlayerState.STATE_PAUSED)
     }
 
     override fun releasePlayer() {
-        mediaPlayer.release()
+        this.mediaPlayer?.release()
     }
 
     override fun getTrackTimeRemained(): Int {
-        return mediaPlayer.currentPosition
+        return this.mediaPlayer?.currentPosition ?: 0
     }
 
     override fun setListener(listener: PlayerStateListener) {
@@ -60,12 +60,12 @@ class PlayerRepositoryImpl(
         if (url.isNullOrEmpty()) return
 
         mediaPlayer = MediaPlayer()
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
+        mediaPlayer!!.setDataSource(url)
+        mediaPlayer!!.prepareAsync()
+        mediaPlayer!!.setOnPreparedListener {
             listener?.onStateChanged(PlayerState.STATE_PREPARED)
         }
-        mediaPlayer.setOnCompletionListener {
+        mediaPlayer!!.setOnCompletionListener {
             listener?.onStateChanged(PlayerState.STATE_PREPARED)
         }
     }
