@@ -12,7 +12,7 @@ class SearchViewModel(
     ) : ViewModel()  {
     companion object {
 
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY_IN_MILLIS = 2000L
 
     }
 
@@ -47,7 +47,7 @@ class SearchViewModel(
 
     fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_IN_MILLIS)
     }
 
     fun openPlayer(track: Track){
