@@ -24,4 +24,9 @@
     <string name="collection">Альбом</string>
     <string name="duration">Длительность</string>
     <string name="artwork">Обложка</string>
+    <string name="favorite_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="favorite_tracks_empty">Ваша медиатека пуста</string>
+    <string name="playlists_empty">Вы не создали ни одного плейлиста</string>
+    <string name="playlist_new">Новый плейлист</string>
 </resources>

@@ -9,5 +9,6 @@
     <dimen name="row_height">60dp</dimen>
     <dimen name="paddingHorizontal">16dp</dimen>
     <dimen name="roundCornerPlayerArtwork">8dp</dimen>
+    <dimen name="favorite_tracks_empty_icon">120dp</dimen>
 
 </resources>

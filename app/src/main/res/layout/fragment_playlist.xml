@@ -1,0 +1,42 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/settings_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_playlist_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:text="@string/playlist_new"
+            android:textAllCaps="false"
+            android:textColor="@color/button_text_placeholder"
+            android:textSize="14sp"
+            android:fontFamily="@font/ys_display_medium"
+            app:backgroundTint="@color/button_background_placeholder"
+            app:cornerRadius="54dp"/>
+
+        <ImageView
+            android:layout_width="@dimen/favorite_tracks_empty_icon"
+            android:layout_height="@dimen/favorite_tracks_empty_icon"
+            android:layout_marginTop="104dp"
+            app:srcCompat="@drawable/noresults"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/playlists_empty"
+            style="@style/MediaTextStyle"/>
+
+    </LinearLayout>
+</ScrollView>
