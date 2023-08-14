@@ -9,7 +9,8 @@
     android:paddingTop="14dp"
     android:paddingLeft="@dimen/paddingHorizontal"
     android:paddingRight="@dimen/paddingHorizontal"
-    android:paddingBottom="16dp">
+    android:paddingBottom="16dp"
+    tools:context=".ui.settings.fragments.SettingsFragment">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -21,7 +22,6 @@
         android:theme="?attr/actionBarTheme"
         app:title="@string/settings"
         android:backgroundTint="@color/settings_background"
-        app:navigationIcon="@drawable/arrowback"
         app:titleTextColor="@color/text_settings"
         app:titleTextAppearance="@style/toolbar_text"
         />

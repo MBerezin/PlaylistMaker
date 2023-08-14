@@ -9,7 +9,8 @@
     android:paddingTop="14dp"
     android:paddingLeft="@dimen/paddingHorizontal"
     android:paddingRight="@dimen/paddingHorizontal"
-    android:paddingBottom="16dp">
+    android:paddingBottom="16dp"
+    tools:context=".ui.search.fragments.SearchFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -20,56 +21,56 @@
         android:theme="?attr/actionBarTheme"
         app:title="@string/search"
         android:backgroundTint="@color/settings_background"
-        app:navigationIcon="@drawable/arrowback"
         app:titleTextColor="@color/search_header"
         app:titleTextAppearance="@style/toolbar_text"
         android:layout_marginLeft="-16dp"/>
 
-        <FrameLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp">
+
+        <EditText
+            android:id="@+id/et_search"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp">
+            android:layout_height="36dp"
+            android:background="@drawable/edit_text_style"
+            android:hint="@string/search"
+            android:textColorHint="@color/search_view_hint"
+            android:paddingLeft="36dp"
+            android:textSize="16sp"
+            android:fontFamily="@font/ys_display_regular"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="@color/search_view_text"
+            android:imeOptions="actionDone"/>
 
-            <EditText
-                android:id="@+id/et_search"
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:background="@drawable/edit_text_style"
-                android:hint="@string/search"
-                android:textColorHint="@color/search_view_hint"
-                android:paddingLeft="36dp"
-                android:textSize="16sp"
-                android:fontFamily="@font/ys_display_regular"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/search_view_text"
-                android:imeOptions="actionDone"/>
+        <ImageView
+            android:id="@+id/img_search"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/search_for_edit_text"
+            android:layout_gravity="left"
+            android:layout_marginTop="11dp"
+            android:layout_marginStart="13dp"/>
 
-            <ImageView
-                android:id="@+id/img_search"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:src="@drawable/search_for_edit_text"
-                android:layout_gravity="left"
-                android:layout_marginTop="11dp"
-                android:layout_marginStart="13dp"/>
+        <ImageView
+            android:id="@+id/img_clear"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/clear"
+            android:layout_gravity="right"
+            android:layout_marginVertical="12dp"
+            android:layout_marginEnd="14dp"
+            android:visibility="gone"/>
 
-            <ImageView
-                android:id="@+id/img_clear"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:src="@drawable/clear"
-                android:layout_gravity="right"
-                android:layout_marginVertical="12dp"
-                android:layout_marginEnd="14dp"
-                android:visibility="gone"/>
-
-        </FrameLayout>
+    </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/trackList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/track_view"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

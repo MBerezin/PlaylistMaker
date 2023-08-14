@@ -1,27 +1,29 @@
-package com.practicum.playlistmaker.ui.search.activity
+package com.practicum.playlistmaker.ui.search.fragments
 
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.practicum.playlistmaker.*
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.ui.search.adapters.TrackAdapter
 import com.practicum.playlistmaker.ui.search.adapters.TrackHistoryAdapter
 import com.practicum.playlistmaker.ui.search.model.ViewModelSearchState
 import com.practicum.playlistmaker.ui.search.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivitySearchBinding
-    private val viewModelSearch: SearchViewModel by viewModel()
+class SearchFragment : Fragment() {
+    private lateinit var binding: FragmentSearchBinding
+    private val viewModel: SearchViewModel by viewModel()
     private val handler = Handler(Looper.getMainLooper())
 
     private var searchText: String = String()
@@ -34,22 +36,27 @@ class SearchActivity : AppCompatActivity() {
 
     private val adapter = TrackAdapter({ track ->
         if (clickDebounce()) {
-            historyAdapter.setTracks(viewModelSearch.addHistoryTrack (track))
-            viewModelSearch.openPlayer(track)
+            historyAdapter.setTracks(viewModel.addHistoryTrack (track))
+            viewModel.openPlayer(track)
         }
 
     })
     private val historyAdapter = TrackHistoryAdapter({ track ->
-        viewModelSearch.openPlayer(track)
+        viewModel.openPlayer(track)
     })
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        viewModelSearch.observeSearchState().observe(this){searchState ->
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.observeSearchState().observe(this.viewLifecycleOwner){searchState ->
             when(searchState){
                 ViewModelSearchState.EmptySearchState -> {
                     binding.linearLayoutPlaceholder.visibility = View.VISIBLE
@@ -81,32 +88,28 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
-        }
+        historyAdapter.setTracks(viewModel.readHistoryTracks())
 
-        historyAdapter.setTracks(viewModelSearch.readHistoryTracks())
-
-        binding.trackList.layoutManager = LinearLayoutManager(this)
+        binding.trackList.layoutManager = LinearLayoutManager(requireContext())
         binding.trackList.adapter = adapter
 
-        binding.historyTrackList.layoutManager = LinearLayoutManager(this)
+        binding.historyTrackList.layoutManager = LinearLayoutManager(requireContext())
         binding.historyTrackList.adapter = historyAdapter
 
         binding.buttonReload.setOnClickListener {
             adapter.clearTracks()
-            viewModelSearch.searchTracks()
+            viewModel.searchTracks()
         }
 
         binding.buttonLearHistory.setOnClickListener {
-            viewModelSearch.clearHistoryTracks()
+            viewModel.clearHistoryTracks()
             historyAdapter.clearTracks()
             binding.linearLayoutHistory.visibility = View.GONE
         }
 
         binding.imgClear.setOnClickListener {
             binding.etSearch.setText("")
-            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputMethodManager = requireContext().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
             adapter.clearTracks()
         }
@@ -118,12 +121,12 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchText = s.toString()
-                viewModelSearch.onTextChanged(s.toString())
+                viewModel.onTextChanged(s.toString())
                 binding.imgClear.isVisible = !s.isNullOrEmpty()
 
                 binding.linearLayoutHistory.visibility =
                     if (binding.etSearch.hasFocus() && s?.isEmpty() === true && historyAdapter.itemCount > 0) View.VISIBLE else View.GONE
-                viewModelSearch.searchDebounce()
+                viewModel.searchDebounce()
 
             }
 
@@ -139,17 +142,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString("searchText", searchText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchText = savedInstanceState.getString("searchText").toString()
-        binding.etSearch.setText(searchText)
-    }
-
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -158,4 +150,5 @@ class SearchActivity : AppCompatActivity() {
         }
         return current
     }
+
 }

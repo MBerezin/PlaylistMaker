@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.media.activity.MediaActivity"
+    tools:context=".ui.media.fragments.MediaFragment"
     android:background="@color/media_background"
     android:paddingTop="14dp"
     android:paddingLeft="@dimen/paddingHorizontal"
@@ -21,7 +21,6 @@
         android:theme="?attr/actionBarTheme"
         app:title="@string/mediathek"
         android:backgroundTint="@color/media_background"
-        app:navigationIcon="@drawable/arrowback"
         app:titleTextColor="@color/search_header"
         app:titleTextAppearance="@style/toolbar_text"
         android:layout_marginLeft="-16dp"/>
