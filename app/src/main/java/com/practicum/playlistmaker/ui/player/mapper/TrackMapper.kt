@@ -8,11 +8,14 @@ import java.util.*
 object TrackMapper {
 
     fun map(track: Track): TrackInfo {
+
+        val trackTime = track.trackTimeMillis?.let{ s -> SimpleDateFormat("mm:ss", Locale.getDefault()).format(s.toInt()) } ?: "00:00"
+
         return TrackInfo(
             trackName = track.trackName,
             artistName = track.artistName,
             artworkUrl500 = track.getCoverArtwork(),
-            trackTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toInt()),
+            trackTime = trackTime,
             collectionName = track.collectionName,
             releaseDate = track.getReleaseDate(),
             primaryGenreName = track.primaryGenreName,
