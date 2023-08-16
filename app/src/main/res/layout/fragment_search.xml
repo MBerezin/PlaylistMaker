@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/settings_background"
+    android:background="@color/search_background"
     android:paddingTop="14dp"
     android:paddingLeft="@dimen/paddingHorizontal"
     android:paddingRight="@dimen/paddingHorizontal"
@@ -20,7 +20,7 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:title="@string/search"
-        android:backgroundTint="@color/settings_background"
+        android:backgroundTint="@color/search_background"
         app:titleTextColor="@color/search_header"
         app:titleTextAppearance="@style/toolbar_text"
         android:layout_marginLeft="-16dp"/>
@@ -70,7 +70,9 @@
         android:id="@+id/trackList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/track_view"/>
+        tools:listitem="@layout/track_view"
+        android:clipToPadding="false"
+        android:paddingBottom="?actionBarSize" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -144,7 +146,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/historyTrackList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingBottom="?actionBarSize"  />
 
         <Button
             android:id="@+id/buttonСlearHistory"
