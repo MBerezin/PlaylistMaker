@@ -1,8 +1,6 @@
 package com.practicum.playlistmaker.ui.search.fragments
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
@@ -12,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
@@ -19,12 +18,13 @@ import com.practicum.playlistmaker.ui.search.adapters.TrackAdapter
 import com.practicum.playlistmaker.ui.search.adapters.TrackHistoryAdapter
 import com.practicum.playlistmaker.ui.search.model.ViewModelSearchState
 import com.practicum.playlistmaker.ui.search.view_model.SearchViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private val viewModel: SearchViewModel by viewModel()
-    private val handler = Handler(Looper.getMainLooper())
 
     private var searchText: String = String()
 
@@ -67,9 +67,9 @@ class SearchFragment : Fragment() {
                     binding.progressBar.visibility = View.GONE
                     binding.linearLayoutPlaceholder.visibility = View.VISIBLE
                     binding.buttonReload.visibility = View.VISIBLE
-                    binding.textViewPlaceholder.text = getString(R.string.connection_problem)
+                    binding.textViewPlaceholder.text = getString(R.string.server_problem)
                         .plus("\n")
-                        .plus(getString(R.string.loading_fail))
+                        .plus(getString(R.string.loading_fail_server))
                     binding.imageViewPlaceholder.setImageResource(R.drawable.connectionproblem)
                 }
                 is ViewModelSearchState.SuccessSearchState -> {
@@ -84,7 +84,15 @@ class SearchFragment : Fragment() {
                     binding.trackList.visibility = View.GONE
                     adapter.clearTracks()
                 }
-
+                ViewModelSearchState.NoConnectionSearchState -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.linearLayoutPlaceholder.visibility = View.VISIBLE
+                    binding.buttonReload.visibility = View.VISIBLE
+                    binding.textViewPlaceholder.text = getString(R.string.connection_problem)
+                        .plus("\n")
+                        .plus(getString(R.string.loading_fail_connection))
+                    binding.imageViewPlaceholder.setImageResource(R.drawable.connectionproblem)
+                }
             }
         }
 
@@ -136,7 +144,7 @@ class SearchFragment : Fragment() {
         }
         binding.etSearch.addTextChangedListener(textWatcher)
 
-        binding.etSearch.setOnFocusChangeListener { view, hasFocus ->
+        binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
             binding.linearLayoutHistory.visibility =
                 if (hasFocus && binding.etSearch.text.isEmpty() && historyAdapter.itemCount > 0) View.VISIBLE else View.GONE
         }
@@ -146,7 +154,10 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }

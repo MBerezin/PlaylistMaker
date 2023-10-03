@@ -25,7 +25,7 @@ val dataModule  = module {
     }
 
     single<NetworkClient> {
-        RetrofitClientImpl(api = get())
+        RetrofitClientImpl(api = get(), androidContext())
     }
 
     single {

@@ -5,7 +5,9 @@ import com.practicum.playlistmaker.data.StorageClient
 import com.practicum.playlistmaker.data.search.network.api.NetworkClient
 import com.practicum.playlistmaker.data.search.api.SearchRepository
 import com.practicum.playlistmaker.domain.player.model.Track
-import com.practicum.playlistmaker.domain.search.models.NetworkError
+import com.practicum.playlistmaker.domain.search.models.SearchStates
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class SearchRepositoryImpl(
     private val storageClient : StorageClient,
@@ -24,18 +26,12 @@ class SearchRepositoryImpl(
         storageClient.clearHistoryTracks()
     }
 
-    override fun searchTracks(
-        searchText: String,
-        success: (ArrayList<Track>) -> Unit,
-        empty: (NetworkError) -> Unit,
-        error: (NetworkError) -> Unit
-    ) {
-        networkClient.searchTracks(
-            searchText = searchText,
-            success = success,
-            empty = empty,
-            error = error
-        )
+    override  fun searchTracks(
+        searchText: String
+    ): Flow<SearchStates> = flow {
+        emit(networkClient.searchTracks(
+            searchText = searchText
+        ))
     }
 
     override fun openPlayer(track: Track) {

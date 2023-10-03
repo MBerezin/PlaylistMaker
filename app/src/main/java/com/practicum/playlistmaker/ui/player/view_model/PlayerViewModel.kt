@@ -11,6 +11,9 @@ import com.practicum.playlistmaker.domain.player.model.Track
 import com.practicum.playlistmaker.ui.player.model.ViewModelPlayerState
 import com.practicum.playlistmaker.ui.player.model.ViewModelTrackState
 import com.practicum.playlistmaker.ui.player.mapper.TrackMapper
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
@@ -27,6 +30,8 @@ class PlayerViewModel(
     private val handler = Handler(Looper.getMainLooper())
     private var currentConsumeRunnable: Runnable? = null
     private var playerState : PlayerState = PlayerState.STATE_DEFAULT
+
+    private var timerJob: Job? = null
     
     fun observePlayerState(): LiveData<ViewModelPlayerState> = playerStateLiveData
     fun observeTrackState(): LiveData<ViewModelTrackState> = trackStateLiveData
@@ -89,6 +94,7 @@ class PlayerViewModel(
         when (playerState) {
             PlayerState.STATE_PLAYING -> {
                 playerInteractor.pauseTrack()
+                timerJob?.cancel()
                 playerStateLiveData.postValue(ViewModelPlayerState.Pause)
             }
             PlayerState.STATE_PREPARED,
@@ -107,19 +113,28 @@ class PlayerViewModel(
     }
 
     private fun startPlayer() {
-        handler.post(setTrackTimeRemained())
         playerStateLiveData.postValue(ViewModelPlayerState.Play)
         playerState = PlayerState.STATE_PLAYING
+        setTrackTimeRemained()
     }
 
-    private fun setTrackTimeRemained(): Runnable{
-        return object : Runnable{
-            override fun run() {
-                handler.postDelayed(this, PROGRESS_TIME_REMAINED_DELAY)
+    private fun setTrackTimeRemained(){
+        timerJob = viewModelScope.launch {
+            while (playerState === PlayerState.STATE_PLAYING){
+                delay(PROGRESS_TIME_REMAINED_DELAY)
                 trackStateLiveData.postValue(ViewModelTrackState.TrackTimeRemain(playerInteractor.getTrackTimeRemained()))
             }
         }
     }
+
+//    private fun setTrackTimeRemained(): Runnable{
+//        return object : Runnable{
+//            override fun run() {
+//                handler.postDelayed(this, PROGRESS_TIME_REMAINED_DELAY)
+//                trackStateLiveData.postValue(ViewModelTrackState.TrackTimeRemain(playerInteractor.getTrackTimeRemained()))
+//            }
+//        }
+//    }
 
     fun startPreparePlayer(url: String) {
         playerInteractor.preparePlayer(url)
