@@ -25,6 +25,8 @@ class PlayerRepositoryImpl(
 
         if (track == null){
             consumer.consume(ConsumerData.Error("Что-то пошло не так, попробуйте еще раз :("))
+        } else if(track.previewUrl.isNullOrEmpty()){
+            consumer.consume(ConsumerData.Error("Отсутствует предварительный просмотр :("))
         } else {
             consumer.consume(ConsumerData.Data(track))
         }

@@ -67,9 +67,9 @@ class SearchFragment : Fragment() {
                     binding.progressBar.visibility = View.GONE
                     binding.linearLayoutPlaceholder.visibility = View.VISIBLE
                     binding.buttonReload.visibility = View.VISIBLE
-                    binding.textViewPlaceholder.text = getString(R.string.server_problem)
+                    binding.textViewPlaceholder.text = getString(R.string.connection_problem)
                         .plus("\n")
-                        .plus(getString(R.string.loading_fail_server))
+                        .plus(getString(R.string.loading_fail))
                     binding.imageViewPlaceholder.setImageResource(R.drawable.connectionproblem)
                 }
                 is ViewModelSearchState.SuccessSearchState -> {
@@ -83,15 +83,6 @@ class SearchFragment : Fragment() {
                     binding.linearLayoutPlaceholder.visibility = View.GONE
                     binding.trackList.visibility = View.GONE
                     adapter.clearTracks()
-                }
-                ViewModelSearchState.NoConnectionSearchState -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.linearLayoutPlaceholder.visibility = View.VISIBLE
-                    binding.buttonReload.visibility = View.VISIBLE
-                    binding.textViewPlaceholder.text = getString(R.string.connection_problem)
-                        .plus("\n")
-                        .plus(getString(R.string.loading_fail_connection))
-                    binding.imageViewPlaceholder.setImageResource(R.drawable.connectionproblem)
                 }
             }
         }

@@ -1,9 +1,5 @@
 package com.practicum.playlistmaker.data.search.network.impl
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import com.practicum.playlistmaker.data.search.network.api.ITunesApi
 import com.practicum.playlistmaker.data.search.network.api.NetworkClient
 import com.practicum.playlistmaker.domain.player.model.Track
@@ -12,16 +8,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class RetrofitClientImpl(
-    private val api: ITunesApi,
-    private val context: Context
+    private val api: ITunesApi
 ) : NetworkClient{
     override suspend fun searchTracks(
         searchText: String
     ): SearchStates {
-
-        if (!isConnected()){
-            return SearchStates.NoConnection()
-        }
 
         return withContext(Dispatchers.IO){
             try {
@@ -37,21 +28,4 @@ class RetrofitClientImpl(
         }
     }
 
-    private fun isConnected(): Boolean {
-        val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val capabilities = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        } else {
-            TODO("VERSION.SDK_INT < M")
-        }
-        if (capabilities != null) {
-            when {
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
-            }
-        }
-        return false
-    }
 }

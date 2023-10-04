@@ -9,5 +9,4 @@ sealed class ViewModelSearchState{
     object EmptySearchState: ViewModelSearchState()
     object ErrorSearchState: ViewModelSearchState()
     object StartSearchState: ViewModelSearchState()
-    object NoConnectionSearchState: ViewModelSearchState()
 }

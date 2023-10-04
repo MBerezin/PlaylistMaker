@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.domain.search.models.SearchStates
 import kotlinx.coroutines.flow.Flow
 
 interface SearchInteractor {
-    suspend fun searchTracks(
+    fun searchTracks(
         searchText: String
     ): Flow<SearchStates>
 

@@ -10,7 +10,7 @@ class SearchInteractorImpl(
     private val searchRepository: SearchRepository
 ) : SearchInteractor{
 
-    override suspend fun searchTracks(
+    override fun searchTracks(
         searchText: String
     ): Flow<SearchStates> {
         return searchRepository.searchTracks(

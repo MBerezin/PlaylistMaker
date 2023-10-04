@@ -14,9 +14,7 @@
 
     <string name="no_results">Ничего не нашлось</string>
     <string name="connection_problem">Проблемы со связью</string>
-    <string name="server_problem">Проблемы с сервером</string>
-    <string name="loading_fail_connection">\nЗагрузка не удалась. Проверьте подключение к интернету</string>
-    <string name="loading_fail_server">\nЗагрузка не удалась. Попробуйте позже</string>
+    <string name="loading_fail">\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="reload">Обновить</string>
     <string name="you_search">Вы искали</string>
     <string name="clear_history">Очистить историю</string>

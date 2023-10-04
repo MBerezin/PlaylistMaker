@@ -42,7 +42,6 @@ class SearchViewModel(
                         is SearchStates.Success -> {searchStateLiveData.postValue(ViewModelSearchState.SuccessSearchState(result.data))}
                         is SearchStates.EmptyError -> {searchStateLiveData.postValue(ViewModelSearchState.EmptySearchState)}
                         is SearchStates.ServerError -> {searchStateLiveData.postValue(ViewModelSearchState.ErrorSearchState)}
-                        is SearchStates.NoConnection -> {searchStateLiveData.postValue(ViewModelSearchState.NoConnectionSearchState)}
                     }
                 }
             }

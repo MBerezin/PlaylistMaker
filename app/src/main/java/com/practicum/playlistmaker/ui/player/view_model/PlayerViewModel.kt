@@ -127,16 +127,7 @@ class PlayerViewModel(
         }
     }
 
-//    private fun setTrackTimeRemained(): Runnable{
-//        return object : Runnable{
-//            override fun run() {
-//                handler.postDelayed(this, PROGRESS_TIME_REMAINED_DELAY)
-//                trackStateLiveData.postValue(ViewModelTrackState.TrackTimeRemain(playerInteractor.getTrackTimeRemained()))
-//            }
-//        }
-//    }
-
-    fun startPreparePlayer(url: String) {
+    fun startPreparePlayer(url: String?) {
         playerInteractor.preparePlayer(url)
     }
 

@@ -6,5 +6,4 @@ sealed class SearchStates(){
     class Success(val data: ArrayList<Track>): SearchStates()
     class EmptyError : SearchStates()
     class ServerError : SearchStates()
-    class NoConnection : SearchStates()
 }
