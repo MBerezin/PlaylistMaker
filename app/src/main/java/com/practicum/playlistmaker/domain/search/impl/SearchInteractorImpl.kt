@@ -22,11 +22,11 @@ class SearchInteractorImpl(
         searchRepository.openPlayer(track)
     }
 
-    override fun readHistoryTracks() : ArrayList<Track> {
+    override suspend fun readHistoryTracks() : ArrayList<Track> {
         return searchRepository.readHistoryTracks()
     }
 
-    override fun addHistoryTrack(track: Track) : ArrayList<Track> {
+    override suspend fun addHistoryTrack(track: Track) : ArrayList<Track> {
         val tracks = searchRepository.readHistoryTracks()
 
         if (tracks.find { it.trackId === track.trackId } !== null) {

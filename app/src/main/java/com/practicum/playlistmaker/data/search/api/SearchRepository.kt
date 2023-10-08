@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.domain.search.models.SearchStates
 import kotlinx.coroutines.flow.Flow
 
 interface SearchRepository {
-    fun readHistoryTracks(): ArrayList<Track>
+    suspend fun readHistoryTracks(): ArrayList<Track>
     fun addHistoryTrack(tracks: ArrayList<Track>)
     fun clearHistoryTracks()
     fun searchTracks(

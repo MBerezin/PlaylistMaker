@@ -10,8 +10,8 @@ interface SearchInteractor {
     ): Flow<SearchStates>
 
     fun openPlayer(track: Track)
-    fun readHistoryTracks():ArrayList<Track>
-    fun addHistoryTrack(track: Track) : ArrayList<Track>
+    suspend fun readHistoryTracks():ArrayList<Track>
+    suspend fun addHistoryTrack(track: Track) : ArrayList<Track>
     fun clearHistoryTracks()
 
 }

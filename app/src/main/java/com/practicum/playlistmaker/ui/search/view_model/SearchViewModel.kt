@@ -60,15 +60,20 @@ class SearchViewModel(
         searchInteractor.openPlayer(track)
     }
 
-    fun addHistoryTrack(track: Track) : ArrayList<Track>{
-        return searchInteractor.addHistoryTrack(track)
+    fun addHistoryTrack(track: Track){
+        viewModelScope.launch {
+            searchStateLiveData.postValue(ViewModelSearchState.AddHistoryState(searchInteractor.addHistoryTrack(track)))
+        }
+
     }
 
     fun clearHistoryTracks(){
         searchInteractor.clearHistoryTracks()
     }
 
-    fun readHistoryTracks() : ArrayList<Track>{
-        return searchInteractor.readHistoryTracks()
+    fun readHistoryTracks(){
+        viewModelScope.launch {
+            searchStateLiveData.postValue(ViewModelSearchState.ReadHistoryState(searchInteractor.readHistoryTracks()))
+        }
     }
 }

@@ -36,7 +36,7 @@ class SearchFragment : Fragment() {
 
     private val adapter = TrackAdapter({ track ->
         if (clickDebounce()) {
-            historyAdapter.setTracks(viewModel.addHistoryTrack (track))
+            viewModel.addHistoryTrack (track)
             viewModel.openPlayer(track)
         }
 
@@ -84,10 +84,16 @@ class SearchFragment : Fragment() {
                     binding.trackList.visibility = View.GONE
                     adapter.clearTracks()
                 }
+                is ViewModelSearchState.ReadHistoryState -> {
+                    historyAdapter.setTracks(searchState.tracks)
+                }
+                is ViewModelSearchState.AddHistoryState -> {
+                    historyAdapter.setTracks(searchState.tracks)
+                }
             }
         }
 
-        historyAdapter.setTracks(viewModel.readHistoryTracks())
+        viewModel.readHistoryTracks()
 
         binding.trackList.layoutManager = LinearLayoutManager(requireContext())
         binding.trackList.adapter = adapter
