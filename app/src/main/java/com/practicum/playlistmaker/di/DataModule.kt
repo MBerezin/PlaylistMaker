@@ -1,7 +1,9 @@
 package com.practicum.playlistmaker.di
 
 import android.content.Context
+import androidx.room.Room
 import com.practicum.playlistmaker.data.ExternalNavigator
+import com.practicum.playlistmaker.data.db.AppDatabase
 import com.practicum.playlistmaker.data.StorageClient
 import com.practicum.playlistmaker.data.impl.ExternalNavigatorImpl
 import com.practicum.playlistmaker.data.player.db.HardCodeTrackDAO
@@ -36,6 +38,9 @@ val dataModule  = module {
 
     single<ExternalNavigator> { ExternalNavigatorImpl(androidContext()) }
 
-    single<StorageClient> { SharedPrefStorageClient(sharedPref = get()) }
+    single<StorageClient> { SharedPrefStorageClient(sharedPref = get(), appDatabase = get()) }
 
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db").build()
+    }
 }
