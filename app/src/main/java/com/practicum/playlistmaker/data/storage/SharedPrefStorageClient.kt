@@ -3,11 +3,13 @@ package com.practicum.playlistmaker.data.storage
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.practicum.playlistmaker.data.StorageClient
+import com.practicum.playlistmaker.data.db.AppDatabase
 import com.practicum.playlistmaker.domain.player.model.Track
 import com.practicum.playlistmaker.domain.settings.model.ThemeSettings
 
 class SharedPrefStorageClient(
-    private val sharedPref: SharedPreferences
+    private val sharedPref: SharedPreferences,
+    private val appDatabase: AppDatabase,
 ): StorageClient {
 
     companion object{
@@ -26,11 +28,18 @@ class SharedPrefStorageClient(
         return ThemeSettings(darkTheme = sharedPref.getBoolean(THEME_SWITCHER_KEY, false))
     }
 
-    override fun readHistoryTracks(): ArrayList<Track> {
+    override suspend fun readHistoryTracks(): ArrayList<Track> {
         val tracks = arrayListOf<Track>()
         val json = sharedPref.getString(SEARCH_HISTORY_KEY, null)
         if (json !== null) {
             val tracksFromJson = Gson().fromJson(json, Array<Track>::class.java)
+
+            val favoriteIds = appDatabase.trackDao().getTrackIds()
+
+            tracks.forEach{
+                it.isFavorite = it.trackId in favoriteIds
+            }
+
             tracks.addAll(tracksFromJson)
         }
 

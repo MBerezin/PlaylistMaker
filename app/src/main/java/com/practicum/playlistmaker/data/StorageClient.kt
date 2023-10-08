@@ -6,7 +6,7 @@ import com.practicum.playlistmaker.domain.settings.model.ThemeSettings
 interface StorageClient {
     fun saveTheme(themeSettings: ThemeSettings)
     fun getTheme(): ThemeSettings
-    fun readHistoryTracks(): ArrayList<Track>
+    suspend fun readHistoryTracks(): ArrayList<Track>
     fun addHistoryTrack(tracks: ArrayList<Track>)
     fun clearHistoryTracks()
     fun openPlayer(track: Track)
