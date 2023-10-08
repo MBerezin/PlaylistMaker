@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.domain.player.model.Track
 
 interface PlayerInteractor {
 
-    fun getTrackDetails(consumer: Consumer<Track>)
+    fun getTrackDetails(consumer: Consumer<Track>): Track?
     fun playTrack()
     fun pauseTrack()
     fun releasePlayer()

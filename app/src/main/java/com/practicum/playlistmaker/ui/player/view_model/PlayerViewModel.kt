@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.ui.player.view_model
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.*
+import com.practicum.playlistmaker.domain.db.FavoriteTracksInteractor
 import com.practicum.playlistmaker.domain.player.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.player.consumer.Consumer
 import com.practicum.playlistmaker.domain.player.consumer.ConsumerData
@@ -11,12 +12,14 @@ import com.practicum.playlistmaker.domain.player.model.Track
 import com.practicum.playlistmaker.ui.player.model.ViewModelPlayerState
 import com.practicum.playlistmaker.ui.player.model.ViewModelTrackState
 import com.practicum.playlistmaker.ui.player.mapper.TrackMapper
+import com.practicum.playlistmaker.ui.player.model.ViewModelFavoriteState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
 ) : ViewModel() {
 
     companion object {
@@ -27,17 +30,21 @@ class PlayerViewModel(
 
     private val playerStateLiveData = MutableLiveData<ViewModelPlayerState>()
     private val trackStateLiveData = MutableLiveData<ViewModelTrackState>()
+    private val favoriteStateLiveData = MutableLiveData<ViewModelFavoriteState>()
     private val handler = Handler(Looper.getMainLooper())
     private var currentConsumeRunnable: Runnable? = null
     private var playerState : PlayerState = PlayerState.STATE_DEFAULT
 
     private var timerJob: Job? = null
+    private var currentTrack: Track? = null
     
     fun observePlayerState(): LiveData<ViewModelPlayerState> = playerStateLiveData
     fun observeTrackState(): LiveData<ViewModelTrackState> = trackStateLiveData
+    fun observeFavoriteState(): LiveData<ViewModelFavoriteState> = favoriteStateLiveData
 
     fun loadTrack(){
-        playerInteractor.getTrackDetails(
+
+        currentTrack = playerInteractor.getTrackDetails(
             consumer = object : Consumer<Track> {
                 override fun consume(data: ConsumerData<Track>) {
                     handler.removeCallbacksSafe(currentConsumeRunnable)
@@ -50,6 +57,18 @@ class PlayerViewModel(
 
             }
         )
+
+        viewModelScope.launch {
+            favoriteTracksInteractor.getTrackIds().collect(){trackIds ->
+                if(currentTrack!!.trackId in trackIds){
+                    currentTrack!!.isFavorite = true
+                    favoriteStateLiveData.postValue(ViewModelFavoriteState.FavoriteTrack)
+                } else {
+                    currentTrack!!.isFavorite = false
+                    favoriteStateLiveData.postValue(ViewModelFavoriteState.NotFavoriteTrack)
+                }
+            }
+        }
     }
 
     private fun getConsumeRunnable(data: ConsumerData<Track>): Runnable {
@@ -69,6 +88,9 @@ class PlayerViewModel(
                         }
                     }
                     val trackInfo = TrackMapper.map(data.value)
+
+
+
 
                     trackStateLiveData.postValue(ViewModelTrackState.ShowTrack(trackInfo))
                 }
@@ -143,6 +165,22 @@ class PlayerViewModel(
     private fun pausePlayer() {
         playerState = PlayerState.STATE_PAUSED
         playerStateLiveData.postValue(ViewModelPlayerState.Pause)
+    }
+
+    fun onFavoriteClicked(){
+        if(currentTrack!!.isFavorite == true){
+            viewModelScope.launch {
+                favoriteTracksInteractor.deleteTrack(currentTrack!!)
+                currentTrack!!.isFavorite = false
+                favoriteStateLiveData.postValue(ViewModelFavoriteState.NotFavoriteTrack)
+            }
+        } else {
+            viewModelScope.launch {
+                favoriteTracksInteractor.insertTrack(currentTrack!!)
+                currentTrack!!.isFavorite = true
+                favoriteStateLiveData.postValue(ViewModelFavoriteState.FavoriteTrack)
+            }
+        }
     }
 
 }

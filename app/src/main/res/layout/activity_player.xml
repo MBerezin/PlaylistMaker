@@ -109,14 +109,14 @@
             android:id="@+id/buttonLikeTrack"
             android:layout_width="51dp"
             android:layout_height="51dp"
-            android:elevation="0dp"
-            android:backgroundTint="@color/player_like_button_bg"
-            android:src="@drawable/like"
             android:background="@drawable/round_button"
+            android:backgroundTint="@color/player_like_button_bg"
+            android:elevation="0dp"
+            android:src="@drawable/notlike"
             app:layout_constraintBottom_toBottomOf="@id/buttonPlayTrack"
             app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
             app:layout_constraintStart_toEndOf="@id/buttonPlayTrack"
-            app:layout_constraintTop_toTopOf="@id/buttonPlayTrack"/>
+            app:layout_constraintTop_toTopOf="@id/buttonPlayTrack" />
 
         <ImageButton
             android:id="@+id/buttonPlayTrack"

@@ -20,7 +20,7 @@ class PlayerRepositoryImpl(
         listener?.onStateChanged(PlayerState.STATE_DEFAULT)
     }
 
-    override fun getTrackDetails(consumer: Consumer<Track>) {
+    override fun getTrackDetails(consumer: Consumer<Track>) : Track? {
         val track = trackDAO.getTrack()
 
         if (track == null){
@@ -30,6 +30,8 @@ class PlayerRepositoryImpl(
         } else {
             consumer.consume(ConsumerData.Data(track))
         }
+
+        return track
     }
 
     override fun playTrack() {

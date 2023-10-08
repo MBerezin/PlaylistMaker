@@ -12,8 +12,8 @@ class PlayerInteractorImpl(
 
     override fun getTrackDetails(
         consumer: Consumer<Track>
-    ) {
-        playerRepository.getTrackDetails(consumer)
+    ): Track? {
+        return playerRepository.getTrackDetails(consumer)
     }
 
     override fun playTrack() {

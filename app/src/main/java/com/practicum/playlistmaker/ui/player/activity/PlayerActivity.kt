@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.ui.player.model.ViewModelFavoriteState
 import com.practicum.playlistmaker.ui.player.model.ViewModelPlayerState
 import com.practicum.playlistmaker.ui.player.model.ViewModelTrackState
 import com.practicum.playlistmaker.ui.player.view_model.PlayerViewModel
@@ -18,6 +19,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
     private val viewModelPlayer: PlayerViewModel by viewModel()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,10 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.buttonPlayTrack.setOnClickListener {
             viewModelPlayer.playbackControl()
+        }
+
+        binding.buttonLikeTrack.setOnClickListener {
+            viewModelPlayer.onFavoriteClicked()
         }
 
         viewModelPlayer.observeTrackState().observe(this){trackState ->
@@ -80,6 +86,17 @@ class PlayerActivity : AppCompatActivity() {
                     binding.buttonPlayTrack.isEnabled = true
                     binding.buttonPlayTrack.setImageResource(R.drawable.play)
                     binding.textViewTimeRemained.text = "00:00"
+                }
+            }
+        }
+
+        viewModelPlayer.observeFavoriteState().observe(this){favoriteState ->
+            when(favoriteState){
+                ViewModelFavoriteState.FavoriteTrack -> {
+                    binding.buttonLikeTrack.setImageResource(R.drawable.like)
+                }
+                ViewModelFavoriteState.NotFavoriteTrack -> {
+                    binding.buttonLikeTrack.setImageResource(R.drawable.notlike)
                 }
             }
         }
