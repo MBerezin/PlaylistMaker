@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.domain.db
+package com.practicum.playlistmaker.domain.media.api
 
 import com.practicum.playlistmaker.domain.player.model.Track
 import kotlinx.coroutines.flow.Flow
