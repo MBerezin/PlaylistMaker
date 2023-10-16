@@ -29,4 +29,20 @@
     <string name="favorite_tracks_empty">Ваша медиатека пуста</string>
     <string name="playlists_empty">Вы не создали ни одного плейлиста</string>
     <string name="playlist_new">Новый плейлист</string>
+    <string name="playlist_name">Название*</string>
+    <string name="playlist_desc">Описание</string>
+    <string name="playlist_creat_confirm">Завершить создание плейлиста?</string>
+    <string name="cancel">Отмена</string>
+    <string name="finish">Завершить</string>
+    <string name="loss_data">Все несохраненные данные будут потеряны</string>
+    <string name="rationale_permission">Разрешение на доступ к файлам необходим для выбора обложки альбома.</string>
+    <string name="denied_permanently_permission">Разрешение на доступ к файлам запрещено. Для включения разрешения необходимо перейти в настройки.</string>
+    <string name="playlists_folder_name">playlists</string>
+    <string name="playlist_cover_filename_part">playlist_cover_</string>
+    <string name="retry">Повторите попытку</string>
+    <string name="playlist_saved_success">Плейлист %s создан</string>
+    <string name="track_add">"Добавлено в плейлист %s"</string>
+    <string name="track_exists_by_playlist">"Трек уже добавлен в плейлист %s"</string>
+    <string name="bottom_sheet_title">Добавить в плейлист</string>
+
 </resources>
