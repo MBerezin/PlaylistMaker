@@ -20,8 +20,8 @@ object TrackMapper {
             releaseDate = track.getReleaseDate(),
             primaryGenreName = track.primaryGenreName,
             country = track.country,
-            previewUrl = track.previewUrl
-
+            previewUrl = track.previewUrl,
+            trackId = track.trackId
         )
     }
 

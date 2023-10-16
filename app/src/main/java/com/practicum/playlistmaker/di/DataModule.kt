@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.di
 
 import android.content.Context
 import androidx.room.Room
+import com.google.gson.Gson
 import com.practicum.playlistmaker.data.ExternalNavigator
 import com.practicum.playlistmaker.data.db.AppDatabase
 import com.practicum.playlistmaker.data.StorageClient
@@ -33,6 +34,8 @@ val dataModule  = module {
     single {
         androidContext().getSharedPreferences("playlist_maker_preferences", Context.MODE_PRIVATE)
     }
+
+    factory { Gson() }
 
     single<TrackDAO> { HardCodeTrackDAO( sharedPref = get()) }
 

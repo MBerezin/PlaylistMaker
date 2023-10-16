@@ -3,7 +3,9 @@ package com.practicum.playlistmaker.ui.player.view_model
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.*
-import com.practicum.playlistmaker.domain.db.FavoriteTracksInteractor
+import com.practicum.playlistmaker.domain.media.api.FavoriteTracksInteractor
+import com.practicum.playlistmaker.domain.media.api.PlaylistInteractor
+import com.practicum.playlistmaker.domain.media.model.Playlist
 import com.practicum.playlistmaker.domain.player.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.player.consumer.Consumer
 import com.practicum.playlistmaker.domain.player.consumer.ConsumerData
@@ -13,6 +15,8 @@ import com.practicum.playlistmaker.ui.player.model.ViewModelPlayerState
 import com.practicum.playlistmaker.ui.player.model.ViewModelTrackState
 import com.practicum.playlistmaker.ui.player.mapper.TrackMapper
 import com.practicum.playlistmaker.ui.player.model.ViewModelFavoriteState
+import com.practicum.playlistmaker.ui.player.model.ViewModelPlaylistState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,6 +24,7 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
+    private val playlistInteractor: PlaylistInteractor,
 ) : ViewModel() {
 
     companion object {
@@ -31,6 +36,7 @@ class PlayerViewModel(
     private val playerStateLiveData = MutableLiveData<ViewModelPlayerState>()
     private val trackStateLiveData = MutableLiveData<ViewModelTrackState>()
     private val favoriteStateLiveData = MutableLiveData<ViewModelFavoriteState>()
+    private val playlistStateLiveData = MutableLiveData<ViewModelPlaylistState>()
     private val handler = Handler(Looper.getMainLooper())
     private var currentConsumeRunnable: Runnable? = null
     private var playerState : PlayerState = PlayerState.STATE_DEFAULT
@@ -41,6 +47,7 @@ class PlayerViewModel(
     fun observePlayerState(): LiveData<ViewModelPlayerState> = playerStateLiveData
     fun observeTrackState(): LiveData<ViewModelTrackState> = trackStateLiveData
     fun observeFavoriteState(): LiveData<ViewModelFavoriteState> = favoriteStateLiveData
+    fun observePlaylistState(): LiveData<ViewModelPlaylistState> = playlistStateLiveData
 
     fun loadTrack(){
 
@@ -181,6 +188,31 @@ class PlayerViewModel(
                 favoriteStateLiveData.postValue(ViewModelFavoriteState.FavoriteTrack)
             }
         }
+    }
+
+    fun getPlaylists() {
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists().collect(){
+                    playlist ->
+                if(playlist.isEmpty()){
+                    playlistStateLiveData.postValue(ViewModelPlaylistState.ListIsEmpty)
+                } else {
+                    playlistStateLiveData.postValue(ViewModelPlaylistState.Success(playlist = playlist))
+                }
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist, playlistTrackIds: List<Int>, trackId: Int?) {
+        if(trackId in playlistTrackIds){
+            playlistStateLiveData.postValue(ViewModelPlaylistState.TrackExistsByPlaylist(playlist = playlist))
+        } else {
+            viewModelScope.launch(Dispatchers.IO) {
+                playlistInteractor.addTrackToPlaylist(playlist, trackId)
+                playlistStateLiveData.postValue(ViewModelPlaylistState.TrackAdded(playlist = playlist))
+            }
+        }
+
     }
 
 }
