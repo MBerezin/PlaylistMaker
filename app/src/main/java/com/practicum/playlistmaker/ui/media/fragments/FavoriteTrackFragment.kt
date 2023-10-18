@@ -27,11 +27,7 @@ class FavoriteTrackFragment : Fragment() {
 
     })
 
-    companion object {
 
-        fun newInstance() = FavoriteTrackFragment()
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,4 +81,11 @@ class FavoriteTrackFragment : Fragment() {
         }
         return current
     }
+
+    companion object {
+
+        fun newInstance() = FavoriteTrackFragment()
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+
 }

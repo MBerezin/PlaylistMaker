@@ -35,7 +35,7 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.addTrackToPlaylist(playlist, playlistTrackIds, currentTrackId)
         }
 
-    })
+    }, this)
 
     private var isClickAllowed = true
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
@@ -135,6 +135,7 @@ class PlayerActivity : AppCompatActivity() {
                 }
                 is ViewModelPlaylistState.TrackAdded -> {
                     Toast.makeText(this, String.format(getString(R.string.track_add), playlistState.playlist.name), Toast.LENGTH_SHORT).show()
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
                 }
                 is ViewModelPlaylistState.TrackExistsByPlaylist -> {

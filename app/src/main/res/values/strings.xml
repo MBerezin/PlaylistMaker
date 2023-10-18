@@ -45,4 +45,13 @@
     <string name="track_exists_by_playlist">"Трек уже добавлен в плейлист %s"</string>
     <string name="bottom_sheet_title">Добавить в плейлист</string>
 
+    <plurals name="track_count">
+        <item quantity="zero">%1$d треков</item>
+        <item quantity="one">%1$d трек</item>
+        <item quantity="two">%1$d трека</item>
+        <item quantity="few">%1$d трека</item>
+        <item quantity="many">%1$d треков</item>
+        <item quantity="other">%1$d треков</item>
+    </plurals>
+
 </resources>

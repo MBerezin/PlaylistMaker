@@ -2,29 +2,26 @@ package com.practicum.playlistmaker.ui.media.fragments
 
 import android.Manifest
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputLayout
 import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
 import com.practicum.playlistmaker.R
@@ -34,9 +31,6 @@ import com.practicum.playlistmaker.ui.media.view_model.NewPlaylistViewModel
 import com.practicum.playlistmaker.ui.player.activity.PlayerActivity
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
-import java.util.*
 
 class NewPlaylistFragment : Fragment() {
 
@@ -52,13 +46,7 @@ class NewPlaylistFragment : Fragment() {
     private var imagePrivateStorageUri = ""
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
-    companion object {
-        fun newInstance() = NewPlaylistFragment()
-        const val TRACK_ID = "TRACK_ID"
-        private const val TITLE_TEXT = "TITLE_TEXT"
-        private const val DESCRIPTION_TEXT = "DESCRIPTION_TEXT"
-        private const val IMAGE_COVER = "IMAGE_COVER"
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,14 +82,20 @@ class NewPlaylistFragment : Fragment() {
             }
         }
 
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
         viewModel.observeState().observe(this.viewLifecycleOwner) { newPlaylistState ->
             when(newPlaylistState){
                 ViewModelNewPlaylistState.SaveError -> {
                     Toast.makeText(requireContext(), R.string.retry, Toast.LENGTH_LONG).show()
                 }
                 ViewModelNewPlaylistState.SaveSuccess -> {
-                    Toast.makeText(requireContext(), String.format(getString(R.string.playlist_saved_success), titleInputText), Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), getString(R.string.playlist_saved_success, titleInputText), Toast.LENGTH_LONG).show()
                     navigateBack()
+                }
+                is ViewModelNewPlaylistState.ImageSaved -> {
+                    imagePrivateStorageUri = newPlaylistState.uri
+                    viewModel.savePlaylist(titleInputText, descriptionInputText, imagePrivateStorageUri)
                 }
             }
         }
@@ -112,10 +106,8 @@ class NewPlaylistFragment : Fragment() {
                 Glide.with(this)
                     .load(uri)
                     .placeholder(R.drawable.playlist_holder)
-                    .centerCrop()
-                    .transform(RoundedCorners(18))
+                    .transform(CenterCrop(), RoundedCorners(resources.getDimensionPixelSize(R.dimen.roundCornerPlayerArtwork)))
                     .into(binding.imageViewCover)
-                //binding.imageViewCover.setImageURI(uri)
             }
         }
 
@@ -160,10 +152,11 @@ class NewPlaylistFragment : Fragment() {
     private fun setCreateBtn(){
         binding.btnCreatePlaylist.setOnClickListener {
             if(titleInputText.isNotEmpty()){
-                coverUri?.let {uri ->
-                    imagePrivateStorageUri = saveImageToPrivateStorage(uri, getString(R.string.playlists_folder_name), getString(R.string.playlist_cover_filename_part))
+                if(coverUri != null){
+                    viewModel.saveImageToPrivateStorage(coverUri!!, getString(R.string.playlists_folder_name), getString(R.string.playlist_cover_filename_part))
+                } else {
+                    viewModel.savePlaylist(titleInputText, descriptionInputText, imagePrivateStorageUri)
                 }
-                viewModel.savePlaylist(titleInputText, descriptionInputText, imagePrivateStorageUri)
             }
         }
     }
@@ -185,18 +178,20 @@ class NewPlaylistFragment : Fragment() {
         confirmDialog = buildDialog()
 
         binding.toolbar.setOnClickListener {
-            if (titleInputText.isEmpty() && descriptionInputText.isEmpty() && coverUri == null) {
-                navigateBack()
-            } else confirmDialog.show()
+            onNavigateBack()
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (titleInputText.isEmpty() && descriptionInputText.isEmpty() && coverUri == null) {
-                    navigateBack()
-                } else confirmDialog.show()
+                onNavigateBack()
             }
         })
+    }
+
+    private fun onNavigateBack(){
+        if (titleInputText.isEmpty() && descriptionInputText.isEmpty() && coverUri == null) {
+            navigateBack()
+        } else confirmDialog.show()
     }
 
     private fun navigateBack(){
@@ -207,7 +202,6 @@ class NewPlaylistFragment : Fragment() {
             val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
             startActivity(playerIntent)
             activity?.finish()
-            //(activity as PlayerActivity).hideBottomSheet(this)
         }
     }
 
@@ -221,7 +215,7 @@ class NewPlaylistFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                setEditTextColors(binding.txtInpLayoutDesc, descriptionInputText)
+
             }
         }
         descriptionTextWatcher?.let { binding.description.addTextChangedListener(it) }
@@ -239,49 +233,18 @@ class NewPlaylistFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                setEditTextColors(binding.txtInpLayoutName, titleInputText)
+
             }
         }
         titleTextWatcher?.let { binding.name.addTextChangedListener(it) }
     }
 
-    private fun setEditTextColors(textInputLayout: TextInputLayout, text: CharSequence?) {
-        val textColor = if (text.toString().isEmpty()) {
-            ResourcesCompat.getColorStateList(resources, R.color.input_text_selector_color_init, requireContext().theme)
-        } else {
-            ResourcesCompat.getColorStateList(resources, R.color.input_text_selector_color, requireContext().theme)
-        }
-
-        if (textColor != null) {
-            textInputLayout.setBoxStrokeColorStateList(textColor)
-            textInputLayout.hintTextColor = textColor
-            textInputLayout.defaultHintTextColor = textColor
-        }
-    }
-
-    private fun saveImageToPrivateStorage(uri: Uri, folderName: String, fileNamePartly: String): String {
-        val filePath = File(
-            requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            folderName
-        )
-
-        if (!filePath.exists()) {
-            filePath.mkdirs()
-        }
-
-        val file = File(
-            filePath,
-            fileNamePartly + UUID.randomUUID()
-                .toString() + ".jpg"
-        )
-
-        val inputStream = requireActivity().contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-
-        BitmapFactory.decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-
-        return file.absolutePath
+    companion object {
+        fun newInstance() = NewPlaylistFragment()
+        const val TRACK_ID = "TRACK_ID"
+        private const val TITLE_TEXT = "TITLE_TEXT"
+        private const val DESCRIPTION_TEXT = "DESCRIPTION_TEXT"
+        private const val IMAGE_COVER = "IMAGE_COVER"
     }
 
 }

@@ -18,7 +18,7 @@ class PlaylistFragment : Fragment() {
 
     private lateinit var binding: FragmentPlaylistBinding
     private val viewModel: PlaylistViewModel by viewModel()
-    private val playlistsAdapter = PlaylistAdapter()
+    private lateinit var playlistsAdapter: PlaylistAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,10 +27,6 @@ class PlaylistFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentPlaylistBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    companion object {
-        fun newInstance() = PlaylistFragment()
     }
 
     override fun onResume() {
@@ -42,6 +38,8 @@ class PlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        playlistsAdapter = PlaylistAdapter(requireContext())
 
         viewModel.observeState().observe(this.viewLifecycleOwner){playlistState ->
             when(playlistState){
@@ -70,5 +68,9 @@ class PlaylistFragment : Fragment() {
         }
 
 
+    }
+
+    companion object {
+        fun newInstance() = PlaylistFragment()
     }
 }

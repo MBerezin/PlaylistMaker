@@ -7,7 +7,9 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.media.fragments.NewPlaylistFragment">
+        tools:context=".ui.media.fragments.NewPlaylistFragment"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -27,7 +29,7 @@
             android:id="@+id/imageViewCover"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="16dp"
+            android:layout_margin="24dp"
             android:contentDescription="@string/artwork"
             android:src="@drawable/playlist_holder"
             app:layout_constraintDimensionRatio="1:1"
@@ -40,8 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
             style="@style/playlist_text_input"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,9 +58,9 @@
                 android:imeOptions="actionDone"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textSize="16sp"
                 android:textColor="@color/tab_layout_text"
-                tools:text="Test"/>
+                android:textSize="16sp"
+                tools:text="Test" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -67,8 +69,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
             style="@style/playlist_text_input"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -93,8 +95,8 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginBottom="32dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
             android:fontFamily="@font/ys_display_medium"
             android:text="Создать"
             android:enabled="false"

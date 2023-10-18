@@ -11,7 +11,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
         android:layout_marginBottom="16dp"
         android:orientation="vertical">
 
@@ -19,8 +18,8 @@
             android:id="@+id/playlistCover"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:paddingVertical="8dp"
-            android:paddingHorizontal="4dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerCrop"
             android:contentDescription="Playlist Cover"
             android:src="@drawable/placeholder"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,11 +28,10 @@
 
         <TextView
             android:id="@+id/playlistTitle"
-            style="@style/playlist_name_text"
+            style="@style/playlist_name_text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            android:layout_marginHorizontal="4dp"
+            android:layout_marginVertical="4dp"
             android:ellipsize="end"
             android:lines="1"
             app:layout_constrainedWidth="true"
@@ -46,11 +44,9 @@
 
         <TextView
             android:id="@+id/tracksQuantity"
-            style="@style/playlist_name_text"
+            style="@style/playlist_name_text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            android:layout_marginHorizontal="4dp"
             android:ellipsize="end"
             android:lines="1"
             app:layout_constrainedWidth="true"

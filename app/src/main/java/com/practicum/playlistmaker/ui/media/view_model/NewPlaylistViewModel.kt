@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.ui.media.view_model
 
+import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,4 +33,14 @@ class NewPlaylistViewModel(
             stateLiveData.postValue(ViewModelNewPlaylistState.SaveSuccess)
         }
     }
+
+    fun saveImageToPrivateStorage(uri: Uri, folderName: String, fileNamePartly: String) {
+        viewModelScope.launch {
+            playlistInteractor.saveImageToPrivateStorage(uri, folderName, fileNamePartly).collect(){
+                stateLiveData.postValue(ViewModelNewPlaylistState.ImageSaved(uri = it))
+            }
+        }
+    }
+
+
 }
