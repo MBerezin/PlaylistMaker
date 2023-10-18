@@ -16,12 +16,14 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
 import com.practicum.playlistmaker.R
@@ -215,7 +217,7 @@ class NewPlaylistFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
+                setEditTextColors(binding.txtInpLayoutDesc, descriptionInputText)
             }
         }
         descriptionTextWatcher?.let { binding.description.addTextChangedListener(it) }
@@ -233,10 +235,24 @@ class NewPlaylistFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
+                setEditTextColors(binding.txtInpLayoutName, titleInputText)
             }
         }
         titleTextWatcher?.let { binding.name.addTextChangedListener(it) }
+    }
+
+    private fun setEditTextColors(textInputLayout: TextInputLayout, text: CharSequence?) {
+        val textColor = if (text.toString().isEmpty()) {
+            ResourcesCompat.getColorStateList(resources, R.color.input_text_selector_color_init, requireContext().theme)
+        } else {
+            ResourcesCompat.getColorStateList(resources, R.color.input_text_selector_color, requireContext().theme)
+        }
+
+        if (textColor != null) {
+            textInputLayout.setBoxStrokeColorStateList(textColor)
+            textInputLayout.hintTextColor = textColor
+            textInputLayout.defaultHintTextColor = textColor
+        }
     }
 
     companion object {

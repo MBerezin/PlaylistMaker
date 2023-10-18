@@ -136,7 +136,6 @@ class PlayerActivity : AppCompatActivity() {
                 is ViewModelPlaylistState.TrackAdded -> {
                     Toast.makeText(this, String.format(getString(R.string.track_add), playlistState.playlist.name), Toast.LENGTH_SHORT).show()
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-
                 }
                 is ViewModelPlaylistState.TrackExistsByPlaylist -> {
                     Toast.makeText(this, String.format(getString(R.string.track_exists_by_playlist), playlistState.playlist.name), Toast.LENGTH_SHORT).show()

@@ -56,7 +56,7 @@ class PlaylistRepositoryImpl(
             if(track != null){
                 appDatabase.playlistTrackDao().insertTrack(playlistTrackDbConvertor.map(track))
                 playlist.tracksList = gson.toJson(playlistTrackIds)
-                playlist.size = +1
+                ++playlist.size
                 appDatabase.playlistDao().updatePlaylist(playlistDbConvertor.map(playlist))
             }
 

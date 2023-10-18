@@ -74,7 +74,7 @@
     <style name="playlist_text_input" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="hintTextColor">@color/blue</item>
         <item name="android:textColorHint">@color/tab_layout_text</item>
-        <item name="boxStrokeColor">@color/input_text_selector_color</item>
+        <item name="boxStrokeColor">@color/input_text_selector_color_init</item>
     </style>
 
     <style name="playlist_name_text">
