@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.ui.media.adapters
 
-import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,14 +10,14 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.media.model.Playlist
 
-class PlaylistViewHolder(itemView: View, val context: Context): RecyclerView.ViewHolder(itemView){
+class PlaylistViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
     private val cover: ImageView = itemView.findViewById(R.id.playlistCover)
     private val playlistName: TextView = itemView.findViewById(R.id.playlistTitle)
     private val playlistSize: TextView = itemView.findViewById(R.id.tracksQuantity)
 
     fun bind(playlist: Playlist) {
         playlistName.text = playlist.name
-        playlistSize.text = context.resources.getQuantityString(R.plurals.track_count, playlist.size, playlist.size)
+        playlistSize.text = itemView.context.resources.getQuantityString(R.plurals.track_count, playlist.size, playlist.size)
 
 
         Glide.with(itemView)

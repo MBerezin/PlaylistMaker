@@ -1,19 +1,18 @@
 package com.practicum.playlistmaker.ui.media.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.media.model.Playlist
 
-class PlaylistAdapter(val context: Context): RecyclerView.Adapter<PlaylistViewHolder>() {
+class PlaylistAdapter(): RecyclerView.Adapter<PlaylistViewHolder>() {
 
     var playlists = mutableListOf<Playlist>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.playlist_card_view, parent, false)
-        return PlaylistViewHolder(view, context)
+        return PlaylistViewHolder(view)
     }
 
     override fun getItemCount(): Int {

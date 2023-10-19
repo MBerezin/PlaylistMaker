@@ -39,7 +39,7 @@ class PlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playlistsAdapter = PlaylistAdapter(requireContext())
+        playlistsAdapter = PlaylistAdapter()
 
         viewModel.observeState().observe(this.viewLifecycleOwner){playlistState ->
             when(playlistState){

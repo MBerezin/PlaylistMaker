@@ -35,7 +35,7 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.addTrackToPlaylist(playlist, playlistTrackIds, currentTrackId)
         }
 
-    }, this)
+    })
 
     private var isClickAllowed = true
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
