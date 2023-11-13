@@ -28,10 +28,6 @@ class SearchFragment : Fragment() {
 
     private var searchText: String = String()
 
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-    }
-
     private var isClickAllowed = true
 
     private val adapter = TrackAdapter({ track ->
@@ -41,11 +37,10 @@ class SearchFragment : Fragment() {
         }
 
     })
+
     private val historyAdapter = TrackHistoryAdapter({ track ->
         viewModel.openPlayer(track)
     })
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,6 +48,7 @@ class SearchFragment : Fragment() {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -159,4 +155,7 @@ class SearchFragment : Fragment() {
         return current
     }
 
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
 }
