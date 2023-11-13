@@ -8,6 +8,7 @@ data class TrackEntity(
     @PrimaryKey
     val id: Int,
     val artworkUrl100: String,
+    val artworkUrl60: String,
     val trackName: String,
     val artistName: String,
     val collectionName: String,

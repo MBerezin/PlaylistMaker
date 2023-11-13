@@ -16,6 +16,7 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Environment
+import com.practicum.playlistmaker.domain.player.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import java.io.File
@@ -54,7 +55,7 @@ class PlaylistRepositoryImpl(
             playlistTrackIds.add(trackId)
             val track = trackDAO.getTrack()
             if(track != null){
-                appDatabase.playlistTrackDao().insertTrack(playlistTrackDbConvertor.map(track))
+                appDatabase.playlistTrackDao().insertTrack(playlistTrackDbConvertor.map(track, playlist.id!!))
                 playlist.tracksList = gson.toJson(playlistTrackIds)
                 ++playlist.size
                 appDatabase.playlistDao().updatePlaylist(playlistDbConvertor.map(playlist))
@@ -90,4 +91,32 @@ class PlaylistRepositoryImpl(
 
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun getTracksByPlaylistId(id: Int): Flow<List<Track>> = flow {
+        val tracks = appDatabase.playlistTrackDao().getTracksByPlaylistId(id)
+        emit(tracks.map {
+            track -> playlistTrackDbConvertor.map(track)
+        })
+    }
+
+    override suspend fun getPlaylist(id: Int): Flow<Playlist> = flow{
+        val playlist = appDatabase.playlistDao().getPlaylist(id)
+        emit(playlistDbConvertor.map(playlist))
+    }
+
+    override suspend fun deleteTrackFromPlaylist(playlist: Playlist, trackId: Int) {
+        val typeTokenArrayList = object : TypeToken<ArrayList<Int>>() {}.type
+        val playlistTrackIds = gson.fromJson<ArrayList<Int>>(playlist.tracksList, typeTokenArrayList) ?: arrayListOf()
+
+        playlistTrackIds.remove(trackId)
+        playlist.tracksList = gson.toJson(playlistTrackIds)
+        --playlist.size
+
+        appDatabase.playlistDao().updatePlaylist(playlistDbConvertor.map(playlist))
+        appDatabase.playlistTrackDao().deleteTrackFromPlaylist(playlist.id!!.toInt(), trackId)
+    }
+
+    override suspend fun deletePlaylist(playlistId: Int) {
+        appDatabase.playlistTrackDao().deleteTracksByPlaylistId(playlistId)
+        appDatabase.playlistDao().deletePlaylist(playlistId)
+    }
 }
