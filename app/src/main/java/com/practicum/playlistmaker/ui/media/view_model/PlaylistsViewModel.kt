@@ -6,15 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.domain.media.api.PlaylistInteractor
 import com.practicum.playlistmaker.domain.media.model.Playlist
-import com.practicum.playlistmaker.ui.media.model.ViewModelPlaylistState
+import com.practicum.playlistmaker.ui.media.model.ViewModelPlaylistsState
 import kotlinx.coroutines.launch
 
-class PlaylistViewModel(
+class PlaylistsViewModel(
     private val playlistInteractor: PlaylistInteractor
 ): ViewModel() {
 
-    private val stateLiveData = MutableLiveData<ViewModelPlaylistState>()
-    fun observeState(): LiveData<ViewModelPlaylistState> = stateLiveData
+    private val stateLiveData = MutableLiveData<ViewModelPlaylistsState>()
+    fun observeState(): LiveData<ViewModelPlaylistsState> = stateLiveData
 
     fun getPlaylists() {
         viewModelScope.launch {
@@ -24,9 +24,9 @@ class PlaylistViewModel(
                     val playlistsList = mutableListOf<Playlist>()
                     playlistsList.addAll(list)
                     if (playlistsList.isNotEmpty()) {
-                        stateLiveData.postValue(ViewModelPlaylistState.Success(playlistsList))
+                        stateLiveData.postValue(ViewModelPlaylistsState.Success(playlistsList))
                     } else {
-                        stateLiveData.postValue(ViewModelPlaylistState.ListIsEmpty)
+                        stateLiveData.postValue(ViewModelPlaylistsState.ListIsEmpty)
                     }
                 }
         }
