@@ -34,18 +34,18 @@ import com.practicum.playlistmaker.ui.player.activity.PlayerActivity
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewPlaylistFragment : Fragment() {
+open class NewPlaylistFragment : Fragment() {
 
     private var _binding: FragmentNewPlaylistBinding? = null
-    private val binding get() = _binding!!
-    private val viewModel: NewPlaylistViewModel by viewModel()
+    protected val binding get() = _binding!!
+    protected open val viewModel: NewPlaylistViewModel by viewModel()
 
-    private var coverUri: Uri? = null
+    protected var coverUri: Uri? = null
     private var titleTextWatcher: TextWatcher? = null
     private var descriptionTextWatcher: TextWatcher? = null
-    private var titleInputText = ""
-    private var descriptionInputText = ""
-    private var imagePrivateStorageUri = ""
+    protected var titleInputText = ""
+    protected var descriptionInputText = ""
+    protected var imagePrivateStorageUri = ""
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
 
@@ -58,13 +58,6 @@ class NewPlaylistFragment : Fragment() {
         return binding.root
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(TITLE_TEXT, titleInputText)
-        outState.putString(DESCRIPTION_TEXT, descriptionInputText)
-        outState.putString(IMAGE_COVER, coverUri?.let { coverUri.toString() })
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         titleTextWatcher?.let { binding.name.removeTextChangedListener(it) }
@@ -75,17 +68,13 @@ class NewPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (savedInstanceState != null) {
-            titleInputText = savedInstanceState.getString(TITLE_TEXT, "")
-            descriptionInputText = savedInstanceState.getString(DESCRIPTION_TEXT, "")
-            val uriStr = savedInstanceState.getString(IMAGE_COVER, "")
-            if (uriStr != "") {
-                coverUri = Uri.parse(uriStr)
-            }
-        }
-
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
+        setOnViewCreated()
+
+    }
+
+    protected open fun setOnViewCreated(){
         viewModel.observeState().observe(this.viewLifecycleOwner) { newPlaylistState ->
             when(newPlaylistState){
                 ViewModelNewPlaylistState.SaveError -> {
@@ -99,9 +88,18 @@ class NewPlaylistFragment : Fragment() {
                     imagePrivateStorageUri = newPlaylistState.uri
                     viewModel.savePlaylist(titleInputText, descriptionInputText, imagePrivateStorageUri)
                 }
+                else -> {}
             }
         }
 
+        setCoverClickListener()
+        setDescriptionTextWatcher()
+        setTitleTextWatcher()
+        setBackNavigation()
+        setCreateBtn()
+    }
+
+    protected fun setCoverClickListener(){
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 coverUri = uri
@@ -143,15 +141,9 @@ class NewPlaylistFragment : Fragment() {
 
 
         }
-
-        setDescriptionTextWatcher()
-        setTitleTextWatcher()
-        setBackNavigation()
-        setCreateBtn()
-
     }
 
-    private fun setCreateBtn(){
+    protected fun setCreateBtn(){
         binding.btnCreatePlaylist.setOnClickListener {
             if(titleInputText.isNotEmpty()){
                 if(coverUri != null){
@@ -175,7 +167,7 @@ class NewPlaylistFragment : Fragment() {
                 navigateBack()
             }
 
-    private fun setBackNavigation() {
+    protected open fun setBackNavigation() {
 
         confirmDialog = buildDialog()
 
@@ -196,7 +188,7 @@ class NewPlaylistFragment : Fragment() {
         } else confirmDialog.show()
     }
 
-    private fun navigateBack(){
+    protected open fun navigateBack(){
         val currentTrackId = arguments?.getString(TRACK_ID)
         if (currentTrackId.isNullOrEmpty()) {
             findNavController().navigateUp()
@@ -207,7 +199,7 @@ class NewPlaylistFragment : Fragment() {
         }
     }
 
-    private fun setDescriptionTextWatcher() {
+    protected fun setDescriptionTextWatcher() {
         descriptionTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -223,7 +215,7 @@ class NewPlaylistFragment : Fragment() {
         descriptionTextWatcher?.let { binding.description.addTextChangedListener(it) }
     }
 
-    private fun setTitleTextWatcher() {
+    protected fun setTitleTextWatcher() {
         titleTextWatcher = object : TextWatcher {
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -258,9 +250,6 @@ class NewPlaylistFragment : Fragment() {
     companion object {
         fun newInstance() = NewPlaylistFragment()
         const val TRACK_ID = "TRACK_ID"
-        private const val TITLE_TEXT = "TITLE_TEXT"
-        private const val DESCRIPTION_TEXT = "DESCRIPTION_TEXT"
-        private const val IMAGE_COVER = "IMAGE_COVER"
     }
 
 }

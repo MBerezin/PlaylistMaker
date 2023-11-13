@@ -11,11 +11,11 @@ import com.practicum.playlistmaker.domain.media.model.Playlist
 import com.practicum.playlistmaker.ui.media.model.ViewModelNewPlaylistState
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(
+open class NewPlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
-    private val stateLiveData = MutableLiveData<ViewModelNewPlaylistState>()
+    protected val stateLiveData = MutableLiveData<ViewModelNewPlaylistState>()
     fun observeState(): LiveData<ViewModelNewPlaylistState> = stateLiveData
 
     fun savePlaylist(titleInputText: String, descriptionInputText: String, imagePrivateStorageUri: String) {
