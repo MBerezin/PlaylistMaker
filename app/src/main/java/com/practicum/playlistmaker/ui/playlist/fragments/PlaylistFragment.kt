@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.doOnNextLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -31,19 +32,19 @@ class PlaylistFragment : Fragment() {
 
     private lateinit var binding: FragmentPlaylistBinding
     private val viewModel: PlaylistViewModel by viewModel()
-    private val adapter = PlaylistAdapter({track ->
-        if (clickDebounce()){
+    private val adapter = PlaylistAdapter({ track ->
+        if (clickDebounce()) {
             viewModel.openPlayer(track)
         }
 
-    }, {track ->
+    }, { track ->
         var dialog = MaterialAlertDialogBuilder(requireActivity())
             .setTitle(R.string.delete_track)
             .setMessage(R.string.question_delete_track)
-            .setNegativeButton(R.string.cancel){dialog, which ->
+            .setNegativeButton(R.string.cancel) { dialog, which ->
                 binding.overlayPlaylist.visibility = View.GONE
             }
-            .setPositiveButton(R.string.delete){dialog, which ->
+            .setPositiveButton(R.string.delete) { dialog, which ->
                 viewModel.deleteTrackFromPlaylist(track.trackId)
             }
         dialog.show()
@@ -71,8 +72,8 @@ class PlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeState().observe(this.viewLifecycleOwner){playlistState ->
-            when(playlistState){
+        viewModel.observeState().observe(this.viewLifecycleOwner) { playlistState ->
+            when (playlistState) {
                 is ViewModelPlaylistState.PlaylistSuccessRead -> {
                     binding.textViewTitle.text = playlistState.playlist.name
                     binding.textViewDescription.text = playlistState.playlist.desc
@@ -84,7 +85,11 @@ class PlaylistFragment : Fragment() {
                         .into(binding.imageViewCover)
 
                     binding.item.playlistName.text = playlistState.playlist.name
-                    binding.item.playlistSize.text = resources.getQuantityString(R.plurals.track_count, playlistState.playlist.size, playlistState.playlist.size)
+                    binding.item.playlistSize.text = resources.getQuantityString(
+                        R.plurals.track_count,
+                        playlistState.playlist.size,
+                        playlistState.playlist.size
+                    )
 
                     Glide.with(this)
                         .load(playlistState.playlist.coverUri.toString())
@@ -95,14 +100,29 @@ class PlaylistFragment : Fragment() {
                     viewModel.getTracksByPlaylistId(requireArguments().getInt(ID))
                 }
                 is ViewModelPlaylistState.TracksSuccessRead -> {
-                    val playTime = SimpleDateFormat("mm", Locale.getDefault()).format(playlistState.tracksPlaytime)
-                    binding.textViewTrackCount.text = resources.getQuantityString(R.plurals.track_count, playlistState.trackCount, playlistState.trackCount)
-                    binding.textViewTracksTime.text = resources.getQuantityString(R.plurals.minutes, playTime.toInt(), playTime.toInt())
-                    if (playlistState.trackCount > 0){
+                    val playTime = SimpleDateFormat(
+                        "mm",
+                        Locale.getDefault()
+                    ).format(playlistState.tracksPlaytime)
+                    binding.textViewTrackCount.text = resources.getQuantityString(
+                        R.plurals.track_count,
+                        playlistState.trackCount,
+                        playlistState.trackCount
+                    )
+                    binding.textViewTracksTime.text = resources.getQuantityString(
+                        R.plurals.minutes,
+                        playTime.toInt(),
+                        playTime.toInt()
+                    )
+                    if (playlistState.trackCount > 0) {
                         binding.tracksBottomSheet.visibility = View.VISIBLE
                     } else {
                         binding.tracksBottomSheet.visibility = View.GONE
-                        Toast.makeText(requireContext(), getString(R.string.playlist_tracks_empty), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.playlist_tracks_empty),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     adapter.clearTracks()
                     adapter.setTracks(playlistState.tracks)
@@ -114,7 +134,7 @@ class PlaylistFragment : Fragment() {
                 ViewModelPlaylistState.PlaylistNoTracks -> {
                     var dialog = MaterialAlertDialogBuilder(requireActivity())
                         .setMessage(getString(R.string.no_tracks_by_playlist))
-                        .setNeutralButton(getString(R.string.close)){ dialog, which ->
+                        .setNeutralButton(getString(R.string.close)) { dialog, which ->
 
                         }
                     dialog.show()
@@ -129,7 +149,8 @@ class PlaylistFragment : Fragment() {
 
         }
 
-        binding.tracks.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.tracks.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.tracks.adapter = adapter
 
         binding.imageViewBackNav.setOnClickListener {
@@ -158,10 +179,10 @@ class PlaylistFragment : Fragment() {
             var dialog = MaterialAlertDialogBuilder(requireActivity())
                 .setTitle(R.string.delete_playlist)
                 .setMessage(R.string.question_delete_playlist)
-                .setNegativeButton(R.string.cancel){dialog, which ->
+                .setNegativeButton(R.string.cancel) { dialog, which ->
                     binding.overlayPlaylist.visibility = View.GONE
                 }
-                .setPositiveButton(R.string.delete){ dialog, which ->
+                .setPositiveButton(R.string.delete) { dialog, which ->
                     viewModel.deletePlaylist(requireArguments().getInt(ID))
                 }
             dialog.show()
@@ -171,7 +192,8 @@ class PlaylistFragment : Fragment() {
         bottomSheetBehaviorPlaylist = BottomSheetBehavior.from(binding.playlistBottomSheet)
         bottomSheetBehaviorPlaylist.state = BottomSheetBehavior.STATE_HIDDEN
 
-        bottomSheetBehaviorPlaylist.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehaviorPlaylist.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
@@ -191,7 +213,15 @@ class PlaylistFragment : Fragment() {
         bottomSheetBehaviorTracks = BottomSheetBehavior.from(binding.tracksBottomSheet)
         binding.tracksBottomSheet.visibility = View.GONE
 
-        bottomSheetBehaviorTracks.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        binding.tracksBottomSheet.doOnNextLayout {
+            bottomSheetBehaviorTracks.peekHeight =
+                binding.root.bottom.toInt() - binding.imageViewMenu.bottom.toInt() - resources.getDimensionPixelSize(
+                    R.dimen.paddingHorizontal
+                )
+        }
+
+        bottomSheetBehaviorTracks.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
 
@@ -202,9 +232,6 @@ class PlaylistFragment : Fragment() {
 
             }
         })
-
-
-
     }
 
     private fun clickDebounce(): Boolean {
@@ -227,5 +254,4 @@ class PlaylistFragment : Fragment() {
             return bundleOf(ID to id)
         }
     }
-
 }
