@@ -145,7 +145,7 @@ open class NewPlaylistFragment : Fragment() {
 
     protected fun setCreateBtn(){
         binding.btnCreatePlaylist.setOnClickListener {
-            if(titleInputText.isNotEmpty()){
+            if(titleInputText.trim().isNotEmpty()){
                 if(coverUri != null){
                     viewModel.saveImageToPrivateStorage(coverUri!!, getString(R.string.playlists_folder_name), getString(R.string.playlist_cover_filename_part))
                 } else {
@@ -156,7 +156,7 @@ open class NewPlaylistFragment : Fragment() {
     }
 
     private fun setCreateBtnEditState(){
-        binding.btnCreatePlaylist.isEnabled = titleInputText.isNotEmpty()
+        binding.btnCreatePlaylist.isEnabled = titleInputText.trim().isNotEmpty()
     }
 
     private fun buildDialog() =
@@ -183,7 +183,7 @@ open class NewPlaylistFragment : Fragment() {
     }
 
     private fun onNavigateBack(){
-        if (titleInputText.isEmpty() && descriptionInputText.isEmpty() && coverUri == null) {
+        if (titleInputText.trim().isEmpty() && descriptionInputText.trim().isEmpty() && coverUri == null) {
             navigateBack()
         } else confirmDialog.show()
     }

@@ -55,7 +55,7 @@ class EditPlaylistFragment: NewPlaylistFragment() {
 
     private fun setSaveBtn() {
         binding.btnCreatePlaylist.setOnClickListener {
-            if(titleInputText.isNotEmpty()){
+            if(titleInputText.trim().isNotEmpty()){
                 if(coverUri != null){
                     viewModel.saveImageToPrivateStorage(coverUri!!, getString(R.string.playlists_folder_name), getString(R.string.playlist_cover_filename_part))
                 } else {
