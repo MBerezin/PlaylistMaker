@@ -98,7 +98,7 @@
             android:layout_marginLeft="17dp"
             android:layout_marginRight="17dp"
             android:fontFamily="@font/ys_display_medium"
-            android:text="Создать"
+            android:text="@string/create_playlist"
             android:enabled="false"
             android:background="@drawable/create_playlist_btn"
             style="@style/create_playlist_btn"

@@ -7,13 +7,16 @@ import androidx.room.PrimaryKey
 data class PlaylistTrackEntity(
     @PrimaryKey
     val id: Int,
+    val playlistId: Int,
     val artworkUrl100: String,
+    val artworkUrl60: String,
     val trackName: String,
     val artistName: String,
-    val collectionName: String,
+    val collectionName: String?,
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
     val trackTimeMillis: String,
-    val previewUrl: String?
+    val previewUrl: String?,
+    val addedAt: Long = System.currentTimeMillis()
 )

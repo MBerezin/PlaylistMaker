@@ -1,6 +1,8 @@
 package com.practicum.playlistmaker.domain.sharing.impl
 
 import com.practicum.playlistmaker.data.ExternalNavigator
+import com.practicum.playlistmaker.domain.media.model.Playlist
+import com.practicum.playlistmaker.domain.player.model.Track
 import com.practicum.playlistmaker.domain.sharing.api.SharingInteractor
 
 class SharingInteractorImpl(
@@ -16,5 +18,9 @@ class SharingInteractorImpl(
 
     override fun openSupport() {
         externalNavigator.openEmail()
+    }
+
+    override fun sharePlaylist(playlist: Playlist, tracks: List<Track>) {
+        externalNavigator.sharePlaylist(playlist, tracks)
     }
 }

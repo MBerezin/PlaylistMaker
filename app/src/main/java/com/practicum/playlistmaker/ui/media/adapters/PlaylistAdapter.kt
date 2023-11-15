@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.media.model.Playlist
 
-class PlaylistAdapter(): RecyclerView.Adapter<PlaylistViewHolder>() {
+class PlaylistAdapter(
+    private val itemClickListener: ((Playlist) -> Unit)
+): RecyclerView.Adapter<PlaylistViewHolder>() {
 
     var playlists = mutableListOf<Playlist>()
 
@@ -21,5 +23,8 @@ class PlaylistAdapter(): RecyclerView.Adapter<PlaylistViewHolder>() {
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         holder.bind(playlists[position])
+        holder.itemView.setOnClickListener() {
+            itemClickListener.invoke(playlists[position])
+        }
     }
 }

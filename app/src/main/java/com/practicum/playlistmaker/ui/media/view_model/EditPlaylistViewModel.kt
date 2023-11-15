@@ -1,28 +1,22 @@
 package com.practicum.playlistmaker.ui.media.view_model
 
-import android.net.Uri
 import androidx.core.net.toUri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.domain.media.api.PlaylistInteractor
 import com.practicum.playlistmaker.domain.media.model.Playlist
 import com.practicum.playlistmaker.ui.media.model.ViewModelNewPlaylistState
 import kotlinx.coroutines.launch
 
-open class NewPlaylistViewModel(
+class EditPlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
-) : ViewModel() {
-
-    protected val stateLiveData = MutableLiveData<ViewModelNewPlaylistState>()
-    fun observeState(): LiveData<ViewModelNewPlaylistState> = stateLiveData
-
-    fun savePlaylist(titleInputText: String, descriptionInputText: String, imagePrivateStorageUri: String) {
+): NewPlaylistViewModel(
+    playlistInteractor
+) {
+    fun savePlaylist(playlistId: Int, titleInputText: String, descriptionInputText: String, imagePrivateStorageUri: String){
         viewModelScope.launch {
-            playlistInteractor.insertPlaylist(
+            playlistInteractor.updatePlaylist(
                 Playlist(
-                    id = null,
+                    id = playlistId,
                     desc = descriptionInputText,
                     name = titleInputText,
                     coverUri = imagePrivateStorageUri.toUri(),
@@ -34,13 +28,13 @@ open class NewPlaylistViewModel(
         }
     }
 
-    fun saveImageToPrivateStorage(uri: Uri, folderName: String, fileNamePartly: String) {
+    fun getPlaylist(id: Int) {
         viewModelScope.launch {
-            playlistInteractor.saveImageToPrivateStorage(uri, folderName, fileNamePartly).collect(){
-                stateLiveData.postValue(ViewModelNewPlaylistState.ImageSaved(uri = it))
-            }
+            playlistInteractor
+                .getPlaylist(id)
+                .collect{ playlist ->
+                    stateLiveData.postValue(ViewModelNewPlaylistState.PlaylistSuccessRead(playlist = playlist))
+                }
         }
     }
-
-
 }

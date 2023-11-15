@@ -44,5 +44,8 @@
     <color name="nav_item_unselected_color">#FFFFFF</color>
 
     <color name="playlist_size_text">#FFFFFF</color>
+    <color name="playlist_bottomsheet_background">#1A1B22</color>
+
+    <color name="black_playlist">#FFFFFF</color>
 
 </resources>
